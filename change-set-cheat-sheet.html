@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Change Set Cheat Sheet — one page</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#14181A; --ink-mid:#4A5457; --ink-soft:#6E777A;
+  --rule:#C7CDC5; --blue:#16406B; --stop:#96281C; --caution:#A96500; --go:#2A6350;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --cond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:#E3E7E1;color:var(--ink);
+  font-family:var(--sans);font-size:14px;line-height:1.45
+}
+.sheet{
+  max-width:1000px;margin:0 auto;padding:26px 24px 60px;background:#FCFCFA;
+  border-left:1px solid var(--rule);border-right:1px solid var(--rule);min-height:100vh
+}
+header{border-bottom:2px solid var(--ink);padding-bottom:12px;margin-bottom:18px;
+  display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap}
+h1{font-family:var(--cond);font-weight:700;font-size:27px;text-transform:uppercase;
+  letter-spacing:.01em;margin:0;line-height:1;flex:1;min-width:240px}
+.path-line{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--ink-soft);text-transform:uppercase}
+.printbtn{
+  font-family:var(--cond);font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+  background:var(--ink);color:#FCFCFA;border:0;border-radius:2px;padding:8px 14px;cursor:pointer
+}
+.printbtn:hover{background:var(--blue)}
+
+.cols{column-count:3;column-gap:22px}
+@media (max-width:900px){.cols{column-count:2}}
+@media (max-width:620px){.cols{column-count:1}}
+
+.blk{break-inside:avoid;margin:0 0 17px;padding:0 0 3px}
+h2{
+  font-family:var(--cond);font-weight:700;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;
+  margin:0 0 8px;padding-bottom:5px;border-bottom:1.5px solid var(--ink)
+}
+h2 .n{font-family:var(--mono);font-weight:500;font-size:10px;color:var(--ink-soft);margin-right:6px}
+ol,ul{margin:0;padding-left:17px}
+li{margin-bottom:5px}
+li:last-child{margin-bottom:0}
+p{margin:0 0 7px}
+strong{font-weight:600}
+em{color:var(--ink-mid)}
+dl{margin:0}
+dt{font-family:var(--cond);font-weight:600;text-transform:uppercase;letter-spacing:.03em;font-size:11.5px;color:var(--ink-mid);margin-top:8px}
+dt:first-child{margin-top:0}
+dd{margin:1px 0 0;font-family:var(--mono);font-size:11px;color:var(--blue);word-break:break-word}
+.box{border-left:3px solid;padding:8px 11px;font-size:13px;background:#F2F4EF}
+.box--stop{border-color:var(--stop)}
+.box--caution{border-color:var(--caution)}
+.box--go{border-color:var(--go)}
+.tick li{list-style:none;position:relative;padding-left:16px;margin-left:-17px}
+.tick li::before{
+  content:"";position:absolute;left:0;top:4px;width:9px;height:9px;
+  border:1.2px solid var(--ink-mid);border-radius:1px
+}
+.hz{height:5px;background:repeating-linear-gradient(135deg,var(--caution) 0 8px,var(--ink) 8px 16px);margin:0 0 9px}
+footer{border-top:1px solid var(--rule);margin-top:14px;padding-top:10px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.05em;color:var(--ink-soft);text-transform:uppercase}
+
+@media print{
+  @page{margin:11mm}
+  body{background:#fff;font-size:8.4pt;line-height:1.34}
+  .sheet{max-width:none;padding:0;border:0;min-height:0;background:#fff}
+  .printbtn{display:none}
+  .cols{column-count:3;column-gap:8mm}
+  header{padding-bottom:6pt;margin-bottom:8pt}
+  h1{font-size:17pt}
+  h2{font-size:8.4pt;margin-bottom:4pt;padding-bottom:2pt}
+  .blk{margin-bottom:9pt}
+  li{margin-bottom:2.4pt}
+  .box{background:#fff;border-left-width:2pt;padding:4pt 6pt}
+  dd{font-size:7.6pt}
+}
+</style>
+</head>
+<body>
+<div class="sheet">
+
+<header>
+  <h1>Change Set Cheat Sheet</h1>
+  <span class="path-line">Dev → UAT / Full → Production</span>
+  <button class="printbtn" type="button" onclick="window.print()">Print</button>
+</header>
+
+<div class="cols">
+
+  <section class="blk">
+    <h2>Setup paths</h2>
+    <dl>
+      <dt>Authorise inbound — in the target org</dt>
+      <dd>Setup → Deployment Settings</dd>
+      <dt>Build and upload — source org</dt>
+      <dd>Setup → Outbound Change Sets</dd>
+      <dt>Validate and deploy — target org</dt>
+      <dd>Setup → Inbound Change Sets</dd>
+      <dt>Monitor, and Quick Deploy</dt>
+      <dd>Setup → Deployment Status</dd>
+      <dt>Allow flows to deploy active</dt>
+      <dd>Setup → Process Automation Settings</dd>
+    </dl>
+  </section>
+
+  <section class="blk">
+    <h2>The seven stages</h2>
+    <ol>
+      <li><strong>Connect</strong> — in the <em>target</em>, allow inbound changes from the source. One-directional.</li>
+      <li><strong>Create</strong> — outbound change set, versioned name, real description.</li>
+      <li><strong>Add</strong> — one component type at a time. <strong>Profiles last.</strong></li>
+      <li><strong>Dependencies</strong> — add what you need, exclude what would overwrite, re-run after changes.</li>
+      <li><strong>Manual steps</strong> — two written lists: before and after.</li>
+      <li><strong>Upload and validate</strong> — upload freezes the set. Always validate.</li>
+      <li><strong>Deploy and verify</strong> — pre-steps, deploy, post-steps, smoke test as a real user, log it.</li>
+    </ol>
+  </section>
+
+  <section class="blk">
+    <h2>Golden rules</h2>
+    <ol>
+      <li>Change sets <strong>add and update only</strong>. Never delete.</li>
+      <li><strong>The receiving org authorises inbound.</strong></li>
+      <li><strong>Uploading freezes</strong> the set — clone to change it.</li>
+      <li><strong>Add profiles last.</strong> They carry only settings for components in the same set.</li>
+      <li><strong>Validate first</strong>, every time, into Production.</li>
+      <li><strong>All-or-nothing</strong> — one failure means nothing deployed.</li>
+      <li><strong>There is no undo.</strong> Prepare the reversal before you need it.</li>
+      <li><strong>Test as a real user</strong>, not as an admin.</li>
+    </ol>
+  </section>
+
+  <section class="blk">
+    <div class="hz"></div>
+    <h2>Never travels in a change set</h2>
+    <ul>
+      <li>Data of any kind — including <strong>custom setting values</strong></li>
+      <li>Deletions of anything</li>
+      <li>Permission set <strong>assignments</strong> to users</li>
+      <li><strong>Record type assignment</strong> to profiles</li>
+      <li>Standard picklist values (usually)</li>
+      <li>Flow <strong>activation</strong> (usually) — old version stays active</li>
+      <li>Queue <strong>membership</strong>; assignment rule <strong>activation</strong></li>
+      <li>Integration secrets, named credentials, scheduled jobs</li>
+      <li>Report / dashboard / template <strong>folders</strong> you forgot to include</li>
+      <li>Translations for new picklist values</li>
+    </ul>
+  </section>
+
+  <section class="blk">
+    <h2>Test levels</h2>
+    <ul>
+      <li><strong>Default</strong> — no tests in sandboxes; local tests run automatically in Production if Apex is present</li>
+      <li><strong>Run local tests</strong> — the standard choice for Production</li>
+      <li><strong>Run all tests</strong> — includes managed packages. Slow; only when implicated</li>
+      <li><strong>Run specified tests</strong> — targeted, must still meet coverage rules</li>
+    </ul>
+    <p style="margin-top:7px"><strong>Production needs ≥75% Apex coverage</strong> and some coverage on every trigger. Coverage failures need developer work — find them days early, not on release night.</p>
+  </section>
+
+  <section class="blk">
+    <h2>Quick Deploy</h2>
+    <p>A successful validation that ran tests unlocks Quick Deploy on the Deployment Status page — applies validated components without re-running tests.</p>
+    <p>It <strong>expires</strong> (commonly cited as 96 hours for change sets; CLI validations are documented at 10 days) and <strong>disappears if metadata changes</strong> or another deployment runs. Then re-validate — nothing is wrong.</p>
+    <div class="box box--go">Validate in business hours when help is available. Deploy in the evening when the blast radius is smallest.</div>
+  </section>
+
+  <section class="blk">
+    <h2>Go / no-go</h2>
+    <ul class="tick">
+      <li>UAT signed off, by name</li>
+      <li>Validated against the target</li>
+      <li>Manual steps written — before and after</li>
+      <li>Rollback plan decided</li>
+      <li>Window agreed, inside policy</li>
+      <li>Named approver said go</li>
+      <li>Someone who understands the change is around afterwards</li>
+    </ul>
+  </section>
+
+  <section class="blk">
+    <h2>Deployed fine, nobody sees it</h2>
+    <p>The most common outcome of a "successful" deployment. Check in this order:</p>
+    <ol>
+      <li>Field-level security / profile not in the set</li>
+      <li>Field not on the layout the user sees</li>
+      <li>Permission set deployed but not assigned</li>
+      <li>Record type not assigned to the profile</li>
+      <li>Flow arrived inactive</li>
+      <li>Custom setting empty in the target</li>
+    </ol>
+  </section>
+
+  <section class="blk">
+    <h2>Common errors, short version</h2>
+    <dl>
+      <dt>Target org missing from upload list</dt>
+      <dd>Inbound not authorised in the target</dd>
+      <dt>Change set is closed</dt>
+      <dd>Clone it, bump the version</dd>
+      <dt>No CustomField named X found</dt>
+      <dd>Add the field, re-run dependencies</dd>
+      <dt>Not available for deploy for this org</dt>
+      <dd>Enable the feature in the target first</dd>
+      <dt>Coverage below 75%</dt>
+      <dd>Developer work — not a release-night fix</dd>
+      <dt>Another deployment in progress</dt>
+      <dd>One at a time. Check Deployment Status</dd>
+      <dt>Insufficient access rights on cross-reference id</dt>
+      <dd>A referenced user, owner, or queue member is missing</dd>
+    </dl>
+  </section>
+
+  <section class="blk">
+    <h2>When a change set is the wrong tool</h2>
+    <ul>
+      <li>You need to <strong>delete</strong> metadata</li>
+      <li>You're <strong>renaming</strong> an API name</li>
+      <li>The release is <strong>very large</strong></li>
+      <li>The same package goes to <strong>unrelated orgs</strong></li>
+      <li>You need <strong>version history</strong> or an audit trail</li>
+      <li>You need a <strong>guaranteed rollback</strong></li>
+    </ul>
+    <div class="box box--caution" style="margin-top:7px">Escalate rather than forcing it. These want a source-driven tool.</div>
+  </section>
+
+  <section class="blk">
+    <h2>Naming convention</h2>
+    <p style="font-family:var(--mono);font-size:11px;color:var(--blue)">YYYY-MM-DD_TICKET_description_vN</p>
+    <p style="font-family:var(--mono);font-size:11px;color:var(--blue)">2026-08-12_CRM-4412_case-routing_v1</p>
+    <p>Version matters because uploads freeze and every fix is a clone.</p>
+  </section>
+
+  <section class="blk">
+    <h2>If it goes wrong</h2>
+    <div class="box box--stop">
+      <p><strong>Failed:</strong> nothing applied. Fix in source, clone, re-validate. Annoying, not dangerous.</p>
+      <p style="margin-bottom:0"><strong>Succeeded but broken:</strong> deactivate the offending automation first, then work the prepared reversal.</p>
+    </div>
+  </section>
+
+</div>
+
+<footer>Change sets add and update only · they never delete · there is no undo · if a path here doesn't match your org, trust the org</footer>
+
+</div>
+</body>
+</html>

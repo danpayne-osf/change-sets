@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Change Set Deployment — Quick Reference Handbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E3E7E1;
+  --card:#FCFCFA;
+  --card-2:#F2F4EF;
+  --ink:#14181A;
+  --ink-mid:#4A5457;
+  --ink-soft:#6E777A;
+  --rule:#C7CDC5;
+  --rule-hard:#A9B1A8;
+  --blue:#16406B;
+  --blue-soft:#E7EDF4;
+  --caution:#A96500;
+  --caution-soft:#F7EEDF;
+  --stop:#96281C;
+  --stop-soft:#F7E8E5;
+  --go:#2A6350;
+  --go-soft:#E4EEE9;
+  --shadow:0 1px 0 rgba(20,24,26,.06), 0 2px 10px rgba(20,24,26,.05);
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --cond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.55;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px 96px}
+
+/* ---------- header ---------- */
+.masthead{padding:40px 0 0}
+.eyebrow{
+  font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--ink-soft);margin:0 0 14px
+}
+h1{
+  font-family:var(--cond);font-weight:700;font-size:clamp(30px,6vw,50px);
+  line-height:1.02;letter-spacing:-.015em;text-transform:uppercase;margin:0 0 12px
+}
+h1 .thin{display:block;font-weight:500;color:var(--ink-mid);font-size:.44em;letter-spacing:.06em;margin-top:12px}
+.lede{max-width:60ch;color:var(--ink-mid);margin:0 0 26px}
+
+/* ---------- signature: the environment strip ---------- */
+.strip{
+  display:flex;align-items:stretch;gap:0;border:1.5px solid var(--ink);
+  background:var(--card);margin:0 0 10px;overflow:hidden
+}
+.leg{
+  flex:1;padding:12px 14px;border-right:1.5px solid var(--ink);min-width:0
+}
+.leg:last-child{border-right:0}
+.leg__i{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--ink-soft);display:block}
+.leg__n{font-family:var(--cond);font-weight:700;font-size:clamp(14px,2.4vw,19px);text-transform:uppercase;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.leg__d{font-size:12px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.leg--prod{background:var(--stop-soft)}
+.leg--prod .leg__n{color:var(--stop)}
+.meter{display:flex;align-items:center;gap:12px;margin:0 0 34px}
+.meter__track{flex:1;height:8px;background:var(--card);border:1.5px solid var(--ink);position:relative}
+.meter__fill{position:absolute;inset:1px auto 1px 1px;background:var(--blue);width:0;transition:width .3s ease}
+.meter__txt{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--ink-mid);white-space:nowrap}
+.meter__reset{
+  font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  background:none;border:1.5px solid var(--rule-hard);color:var(--ink-soft);
+  padding:4px 9px;cursor:pointer;border-radius:2px
+}
+.meter__reset:hover{border-color:var(--ink);color:var(--ink)}
+.storage-note{font-family:var(--mono);font-size:11px;color:var(--ink-soft);margin:-24px 0 30px;display:none}
+.storage-note.show{display:block}
+
+/* ---------- tabs ---------- */
+.tabs{
+  position:sticky;top:0;z-index:20;background:var(--paper);
+  border-bottom:1.5px solid var(--ink);display:flex;gap:0;overflow-x:auto;
+  margin:0 0 34px;scrollbar-width:none
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  font-family:var(--cond);font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;
+  background:none;border:0;border-bottom:3px solid transparent;color:var(--ink-soft);
+  padding:14px 16px;cursor:pointer;white-space:nowrap
+}
+.tab:first-child{padding-left:0}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--blue)}
+.panel[hidden]{display:none}
+
+/* ---------- sections & cards ---------- */
+.sec-head{margin:0 0 20px}
+.sec-head h2{
+  font-family:var(--cond);font-weight:700;font-size:26px;text-transform:uppercase;
+  letter-spacing:.01em;margin:0 0 6px
+}
+.sec-head p{color:var(--ink-mid);margin:0;max-width:66ch}
+
+.card{
+  background:var(--card);border:1px solid var(--rule);border-radius:3px;
+  box-shadow:var(--shadow);padding:22px 24px;margin:0 0 18px;position:relative
+}
+.card--hazard::before{
+  content:"";position:absolute;left:0;right:0;top:0;height:6px;border-radius:3px 3px 0 0;
+  background:repeating-linear-gradient(135deg,var(--caution) 0 10px,var(--ink) 10px 20px)
+}
+.card--hazard{padding-top:30px}
+
+.stage__top{display:flex;align-items:baseline;gap:14px;margin:0 0 4px;flex-wrap:wrap}
+.stage__no{
+  font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.12em;
+  color:var(--card);background:var(--ink);padding:3px 8px;border-radius:2px
+}
+.stage__ttl{font-family:var(--cond);font-weight:700;font-size:22px;text-transform:uppercase;letter-spacing:.01em;margin:0;flex:1;min-width:200px}
+.stage__cnt{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--ink-soft)}
+.stage__cnt.done{color:var(--go);font-weight:600}
+.stage__sub{color:var(--ink-mid);margin:0 0 16px;max-width:68ch}
+
+.card h4{
+  font-family:var(--cond);font-weight:600;font-size:13px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-soft);margin:22px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--rule)
+}
+.card h4:first-child{margin-top:0}
+.card p{margin:0 0 12px}
+.card p:last-child{margin-bottom:0}
+.card ul{margin:0 0 12px;padding-left:20px}
+.card li{margin:0 0 6px}
+.card li:last-child{margin-bottom:0}
+
+.path{
+  font-family:var(--mono);font-size:12.5px;background:var(--blue-soft);color:var(--blue);
+  border:1px solid #CDDBE8;border-radius:2px;padding:8px 11px;display:inline-block;margin:0 0 16px;
+  max-width:100%;overflow-x:auto;white-space:nowrap
+}
+code{font-family:var(--mono);font-size:.88em;background:var(--card-2);border:1px solid var(--rule);border-radius:2px;padding:1px 5px}
+strong{font-weight:600}
+
+/* ---------- callouts ---------- */
+.callout{border-left:3px solid;padding:12px 15px;margin:0 0 16px;border-radius:0 2px 2px 0;font-size:15px}
+.callout__t{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;display:block;margin-bottom:5px}
+.callout p{margin:0 0 8px}
+.callout p:last-child{margin-bottom:0}
+.callout--note{border-color:var(--blue);background:var(--blue-soft)}
+.callout--note .callout__t{color:var(--blue)}
+.callout--caution{border-color:var(--caution);background:var(--caution-soft)}
+.callout--caution .callout__t{color:var(--caution)}
+.callout--stop{border-color:var(--stop);background:var(--stop-soft)}
+.callout--stop .callout__t{color:var(--stop)}
+.callout--go{border-color:var(--go);background:var(--go-soft)}
+.callout--go .callout__t{color:var(--go)}
+
+/* ---------- checklist ---------- */
+.checks{margin:14px 0 0;padding:0;list-style:none}
+.check{display:flex;gap:11px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--rule);cursor:pointer}
+.checks .check:last-child{border-bottom:1px solid var(--rule)}
+.check input{
+  appearance:none;-webkit-appearance:none;margin:2px 0 0;flex:0 0 auto;
+  width:17px;height:17px;border:1.5px solid var(--ink-mid);border-radius:2px;
+  background:var(--card);cursor:pointer;position:relative
+}
+.check input:checked{background:var(--go);border-color:var(--go)}
+.check input:checked::after{
+  content:"";position:absolute;left:5px;top:1.5px;width:4px;height:9px;
+  border:solid var(--card);border-width:0 2px 2px 0;transform:rotate(42deg)
+}
+.check input:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.check span{flex:1}
+.check input:checked + span{color:var(--ink-soft);text-decoration:line-through;text-decoration-color:var(--rule-hard)}
+
+/* ---------- tables ---------- */
+.t-wrap{overflow-x:auto;border:1px solid var(--rule);border-radius:3px;background:var(--card);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:14.5px}
+th{
+  font-family:var(--cond);font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  text-align:left;padding:11px 14px;background:var(--card-2);border-bottom:1.5px solid var(--ink);white-space:nowrap
+}
+td{padding:11px 14px;border-bottom:1px solid var(--rule);vertical-align:top}
+tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--card-2)}
+td:first-child{font-weight:600;white-space:nowrap}
+.tag{
+  font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+  padding:2px 6px;border-radius:2px;white-space:nowrap;display:inline-block
+}
+.tag--no{background:var(--stop-soft);color:var(--stop)}
+.tag--yes{background:var(--go-soft);color:var(--go)}
+.tag--part{background:var(--caution-soft);color:var(--caution)}
+
+/* ---------- search ---------- */
+.search{display:flex;align-items:center;gap:12px;margin:0 0 18px;flex-wrap:wrap}
+.search input{
+  flex:1;min-width:220px;font-family:var(--sans);font-size:15px;padding:10px 13px;
+  border:1.5px solid var(--rule-hard);border-radius:2px;background:var(--card);color:var(--ink)
+}
+.search input:focus{outline:none;border-color:var(--blue)}
+.search__c{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--ink-soft)}
+.empty{font-family:var(--mono);font-size:13px;color:var(--ink-soft);padding:20px;text-align:center;display:none}
+.empty.show{display:block}
+
+/* ---------- error decoder ---------- */
+.err{background:var(--card);border:1px solid var(--rule);border-radius:3px;margin:0 0 10px;box-shadow:var(--shadow);overflow:hidden}
+.err__q{
+  width:100%;text-align:left;background:none;border:0;padding:15px 46px 15px 18px;cursor:pointer;
+  font-family:var(--mono);font-size:13.5px;color:var(--ink);position:relative;line-height:1.45
+}
+.err__q:hover{background:var(--card-2)}
+.err__q::after{
+  content:"+";position:absolute;right:17px;top:50%;transform:translateY(-50%);
+  font-family:var(--cond);font-size:19px;color:var(--ink-soft)
+}
+.err[open] .err__q::after{content:"−"}
+.err__a{padding:2px 18px 18px;border-top:1px solid var(--rule);font-size:15px}
+.err__a p{margin:12px 0 0}
+.err__a ol{margin:12px 0 0;padding-left:22px}
+.err__a li{margin-bottom:5px}
+.err__lbl{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);display:block;margin:14px 0 -6px}
+
+/* ---------- templates ---------- */
+.tpl{background:var(--card);border:1px solid var(--rule);border-radius:3px;box-shadow:var(--shadow);margin:0 0 20px;overflow:hidden}
+.tpl__h{display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid var(--rule);background:var(--card-2)}
+.tpl__n{font-family:var(--cond);font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.04em;margin:0;flex:1}
+.copy{
+  font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;
+  background:var(--ink);color:var(--card);border:0;border-radius:2px;padding:7px 13px;cursor:pointer
+}
+.copy:hover{background:var(--blue)}
+.copy.ok{background:var(--go)}
+.tpl__d{padding:12px 18px 0;color:var(--ink-mid);font-size:14.5px;margin:0}
+pre{
+  font-family:var(--mono);font-size:12px;line-height:1.6;margin:14px 0 0;padding:16px 18px;
+  overflow-x:auto;background:var(--card-2);border-top:1px solid var(--rule);white-space:pre
+}
+
+/* ---------- cheat sheet ---------- */
+.cheat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px}
+.cheat{background:var(--card);border:1px solid var(--rule);border-radius:3px;box-shadow:var(--shadow);padding:18px 20px;break-inside:avoid}
+.cheat h3{
+  font-family:var(--cond);font-weight:700;font-size:14px;letter-spacing:.1em;text-transform:uppercase;
+  margin:0 0 12px;padding-bottom:8px;border-bottom:1.5px solid var(--ink)
+}
+.cheat ol,.cheat ul{margin:0;padding-left:19px;font-size:14.5px}
+.cheat li{margin-bottom:7px}
+.cheat li:last-child{margin-bottom:0}
+.cheat dl{margin:0;font-size:14px}
+.cheat dt{font-family:var(--cond);font-weight:600;text-transform:uppercase;letter-spacing:.04em;font-size:12.5px;color:var(--ink-mid);margin-top:11px}
+.cheat dt:first-child{margin-top:0}
+.cheat dd{margin:2px 0 0;font-family:var(--mono);font-size:12px;color:var(--blue);word-break:break-word}
+.print-row{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 22px}
+.btn{
+  font-family:var(--cond);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;
+  background:var(--ink);color:var(--card);border:1.5px solid var(--ink);border-radius:2px;
+  padding:10px 16px;cursor:pointer
+}
+.btn:hover{background:var(--blue);border-color:var(--blue)}
+.btn--ghost{background:none;color:var(--ink)}
+.btn--ghost:hover{background:var(--ink);color:var(--card)}
+
+footer{border-top:1.5px solid var(--rule-hard);margin-top:44px;padding-top:18px;font-size:13px;color:var(--ink-soft)}
+footer p{margin:0 0 6px}
+a{color:var(--blue)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+@media (max-width:640px){
+  body{font-size:15.5px}
+  .wrap{padding:0 16px 72px}
+  .card{padding:18px 16px}
+  .card--hazard{padding-top:26px}
+  .strip{flex-direction:column}
+  .leg{border-right:0;border-bottom:1.5px solid var(--ink)}
+  .leg:last-child{border-bottom:0}
+  .leg__n,.leg__d{white-space:normal}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important}
+}
+@media print{
+  :root{--paper:#fff;--card:#fff;--card-2:#fff}
+  body{font-size:10.5pt}
+  .tabs,.meter,.storage-note,.print-row,.search,.copy{display:none !important}
+  .panel[hidden]{display:none !important}
+  .card,.cheat,.t-wrap,.tpl,.err{box-shadow:none;break-inside:avoid}
+  .wrap{max-width:none;padding:0}
+  .masthead{padding-top:0}
+  a{text-decoration:none;color:#000}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <p class="eyebrow">Salesforce release operations</p>
+  <h1>Change Set<br>Deployment
+    <span class="thin">Quick reference handbook</span>
+  </h1>
+  <p class="lede">A change set moves configuration between related Salesforce orgs. It carries no data, and it cannot delete anything. Work down the stages in order — the checklist remembers where you got to.</p>
+
+  <div class="strip" role="img" aria-label="Deployment path: Dev sandbox, then UAT or Full sandbox, then Production">
+    <div class="leg">
+      <span class="leg__i">ORIGIN</span>
+      <span class="leg__n">Dev sandbox</span>
+      <span class="leg__d">Build here</span>
+    </div>
+    <div class="leg">
+      <span class="leg__i">STOP 01</span>
+      <span class="leg__n">UAT / Full</span>
+      <span class="leg__d">Prove it here</span>
+    </div>
+    <div class="leg leg--prod">
+      <span class="leg__i">STOP 02 · LIVE</span>
+      <span class="leg__n">Production</span>
+      <span class="leg__d">No undo here</span>
+    </div>
+  </div>
+
+  <div class="meter">
+    <div class="meter__track"><div class="meter__fill" id="fill"></div></div>
+    <span class="meter__txt" id="mtxt">0 of 0 steps</span>
+    <button class="meter__reset" id="reset" type="button">Reset run</button>
+  </div>
+  <p class="storage-note" id="snote">Progress is kept for this session only — this copy of the file can't save state.</p>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="Guide sections">
+  <button class="tab" role="tab" aria-selected="true" aria-controls="p-run" id="t-run">The run</button>
+  <button class="tab" role="tab" aria-selected="false" aria-controls="p-comp" id="t-comp">Components</button>
+  <button class="tab" role="tab" aria-selected="false" aria-controls="p-err" id="t-err">Error decoder</button>
+  <button class="tab" role="tab" aria-selected="false" aria-controls="p-tpl" id="t-tpl">Templates</button>
+  <button class="tab" role="tab" aria-selected="false" aria-controls="p-gov" id="t-gov">Governance</button>
+  <button class="tab" role="tab" aria-selected="false" aria-controls="p-cheat" id="t-cheat">Cheat sheet</button>
+</nav>
+
+<!-- ============ THE RUN ============ -->
+<section class="panel" id="p-run" role="tabpanel" aria-labelledby="t-run">
+
+  <div class="sec-head">
+    <h2>Before you start</h2>
+    <p>Five facts that explain most of the trouble people have with change sets. Read them once and a lot of confusing behaviour stops being confusing.</p>
+  </div>
+
+  <div class="card">
+    <h4>The five things that surprise everyone</h4>
+    <ul>
+      <li><strong>Change sets add and update. They never delete.</strong> Removing a field, layout, or rule from Production is a manual job, done by hand in Production, after the deployment.</li>
+      <li><strong>They only work between related orgs</strong> — a Production org and the sandboxes refreshed from it. Never a client org, a partner org, or an unrelated Developer Edition org.</li>
+      <li><strong>Once you upload, the change set is frozen.</strong> You cannot add a forgotten component. You clone it, add the component, and upload again — which is why version numbers belong in the name.</li>
+      <li><strong>A deployment is all-or-nothing.</strong> One component fails, nothing is applied. That's a safety net, not a bug.</li>
+      <li><strong>There is no undo.</strong> "Rollback" means a reverse change set you built in advance, or manual reversal. Decide before you deploy.</li>
+    </ul>
+
+    <h4>When a change set is the wrong tool</h4>
+    <p>Recognising these early saves a wasted afternoon. In each case, escalate rather than forcing it:</p>
+    <ul>
+      <li><strong>You need to delete something.</strong> Change sets can't. Manual removal, or a destructive-changes deployment through the Metadata API.</li>
+      <li><strong>You're renaming an API name.</strong> Deploys as a new component and leaves the old one behind.</li>
+      <li><strong>The release is very large.</strong> Hundreds of components are unmanageable to assemble and impossible to review by hand.</li>
+      <li><strong>The same package goes to several unrelated orgs.</strong> One org family, one target per upload.</li>
+      <li><strong>You need version history or an audit trail.</strong> A change set records what moved, not what changed or who changed it.</li>
+      <li><strong>An emergency fix that must be revertible on demand.</strong></li>
+    </ul>
+    <div class="callout callout--note">
+      <span class="callout__t">Where to go instead</span>
+      <p>Those cases want a source-driven tool — Salesforce CLI with version control, or a product like Gearset or Copado. Setting that up is a separate conversation. The skill worth having today is noticing when the change set is the wrong shape for the job.</p>
+    </div>
+
+    <h4>Who does what</h4>
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th>Role</th><th>Responsibility</th></tr></thead>
+        <tbody>
+          <tr><td>BA / PM / requester</td><td>Writes the deployment request: what's changing, which ticket, what "working" looks like, who signed off UAT. Does not build the change set.</td></tr>
+          <tr><td>Admin (source org)</td><td>Builds the change set, runs dependencies, records the manual steps, uploads.</td></tr>
+          <tr><td>Admin (target org)</td><td>Validates, deploys, verifies. In Production, a deliberately short list of named people.</td></tr>
+          <tr><td>Approver</td><td>Says go or no-go. Should not be the person who built the change set.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout callout--caution" style="margin-top:16px">
+      <span class="callout__t">Missing Deploy button?</span>
+      <p>Deploying needs the <strong>Deploy Change Sets</strong> permission (or Modify All Data) in the <em>target</em> org. That's almost always the reason.</p>
+    </div>
+  </div>
+
+  <div class="sec-head" style="margin-top:40px">
+    <h2>The seven stages</h2>
+    <p>In order, every time. Tick as you go.</p>
+  </div>
+
+  <!-- STAGE 1 -->
+  <article class="card stage">
+    <div class="stage__top">
+      <span class="stage__no">01</span>
+      <h3 class="stage__ttl">Connect the environments</h3>
+      <span class="stage__cnt" data-count></span>
+    </div>
+    <p class="stage__sub">Done once per pair of orgs. A refreshed sandbox is effectively a new org, so it needs doing again.</p>
+    <span class="path">Setup → Quick Find → Deployment Settings</span>
+
+    <div class="callout callout--stop">
+      <span class="callout__t">The rule that catches everyone</span>
+      <p><strong>The receiving org grants permission, not the sending org.</strong> Authorisation is one-directional. Sending Dev → UAT means logging into <strong>UAT</strong> and allowing inbound changes from Dev.</p>
+    </div>
+
+    <h4>Steps — Dev to UAT</h4>
+    <ul class="checks">
+      <li><label class="check"><input type="checkbox" data-k="s1a"><span>Log into <strong>UAT</strong> — the target, not the source</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s1b"><span>Setup → <strong>Deployment Settings</strong></span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s1c"><span>Find <strong>Dev</strong> in the connection list and click <strong>Edit</strong></span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s1d"><span>Tick <strong>Allow Inbound Changes</strong>, then Save</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s1e"><span>Repeat in <strong>Production</strong> for the UAT connection — well before release day, not during the window</span></label></li>
+    </ul>
+
+    <h4>If this stage misbehaves</h4>
+    <ul>
+      <li><strong>The target isn't in the dropdown when I upload.</strong> Inbound changes aren't authorised in the target. Go tick the box there.</li>
+      <li><strong>The org isn't in Deployment Settings at all.</strong> It isn't in this org family — change sets won't work.</li>
+      <li><strong>It worked last month, not now.</strong> The target sandbox was refreshed. Re-authorise.</li>
+    </ul>
+  </article>
+
+  <!-- STAGE 2 -->
+  <article class="card stage">
+    <div class="stage__top">
+      <span class="stage__no">02</span>
+      <h3 class="stage__ttl">Create the outbound change set</h3>
+      <span class="stage__cnt" data-count></span>
+    </div>
+    <p class="stage__sub">In the source org. Naming and description are not admin overhead — they're the only context the person deploying will have.</p>
+    <span class="path">Setup → Quick Find → Outbound Change Sets → New</span>
+
+    <h4>Name it so the next person understands it</h4>
+    <p>Uploaded change sets freeze and get cloned, so a version number saves you from three change sets called "Case Changes":</p>
+    <pre style="border-top:0;border:1px solid var(--rule);border-radius:2px;margin:0 0 16px">YYYY-MM-DD_TICKET_short-description_vN
+
+2026-08-12_CRM-4412_case-routing_v1
+2026-08-12_CRM-4412_case-routing_v2</pre>
+
+    <h4>Checklist</h4>
+    <ul class="checks">
+      <li><label class="check"><input type="checkbox" data-k="s2a"><span>Confirm the source sandbox is <strong>not scheduled for refresh</strong> — a refresh destroys the change sets inside it</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s2b"><span>Named with date, ticket, description, and version</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s2c"><span>Description includes the ticket reference and one sentence on what users will notice</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s2d"><span>Description names who requested it and who signed off UAT</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s2e"><span>Description <strong>points at where the manual steps are recorded</strong></span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s2f"><span>Anything unusual is flagged — a feature to enable first, a data load to follow</span></label></li>
+    </ul>
+    <div class="callout callout--caution" style="margin-top:18px">
+      <span class="callout__t">Why the description matters</span>
+      <p>A description saying "changes" is how deployments get deployed by someone who has no idea what they're deploying.</p>
+    </div>
+  </article>
+
+  <!-- STAGE 3 -->
+  <article class="card stage">
+    <div class="stage__top">
+      <span class="stage__no">03</span>
+      <h3 class="stage__ttl">Add components</h3>
+      <span class="stage__cnt" data-count></span>
+    </div>
+    <p class="stage__sub">The picker shows one component type at a time. It's repetitive and there's no bulk shortcut, so work from a written list rather than memory.</p>
+    <span class="path">Open the change set → Change Set Components → Add</span>
+
+    <div class="callout callout--stop">
+      <span class="callout__t">Order matters for one thing</span>
+      <p><strong>Add profiles and permission sets last</strong>, after everything else is in. A profile in a change set carries <em>only the settings relating to components in that same change set</em>. Add it first and you export an almost-empty profile.</p>
+    </div>
+
+    <h4>Method</h4>
+    <ul class="checks">
+      <li><label class="check"><input type="checkbox" data-k="s3a"><span>Write the component list <strong>before</strong> opening Salesforce — from the ticket, your change log, or a Setup Audit Trail export</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s3b"><span>Add type by type, ticking items off the written list</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s3c"><span>Add page layouts alongside the fields that appear on them</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s3d"><span>Add profiles and permission sets <strong>last</strong></span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s3e"><span>Component count matches the written list</span></label></li>
+    </ul>
+
+    <h4>Commonly forgotten</h4>
+    <ul>
+      <li>The <strong>page layout</strong> a new field needs in order to be visible</li>
+      <li><strong>Record types</strong>, when a layout assignment depends on them</li>
+      <li>The <strong>folder</strong> for a new report, dashboard, or email template</li>
+      <li>The <strong>object itself</strong>, when the field is on a brand-new object</li>
+      <li><strong>Tabs and app assignments</strong> for a new object</li>
+      <li>Custom <strong>labels</strong> referenced by a flow or formula</li>
+    </ul>
+  </article>
+
+  <!-- STAGE 4 -->
+  <article class="card stage">
+    <div class="stage__top">
+      <span class="stage__no">04</span>
+      <h3 class="stage__ttl">Check dependencies</h3>
+      <span class="stage__cnt" data-count></span>
+    </div>
+    <p class="stage__sub">Salesforce inspects your components and lists other metadata they reference. It catches a large share of failures — treat it as a helpful assistant, not an authority.</p>
+    <span class="path">Open the change set → View/Add Dependencies</span>
+
+    <ul class="checks">
+      <li><label class="check"><input type="checkbox" data-k="s4a"><span>Clicked <strong>View/Add Dependencies</strong> and read the list</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s4b"><span>Added what the change genuinely needs — <strong>did not reflexively select all</strong></span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s4c"><span>Deliberately excluded anything that would overwrite unrelated Production config (whole profiles, layouts nobody asked me to touch)</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s4d"><span>Re-ran dependencies after adding components, because new components bring new dependencies</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s4e"><span>Reread the final component list against the ticket</span></label></li>
+    </ul>
+
+    <div class="callout callout--caution">
+      <span class="callout__t">Select All is not free</span>
+      <p>Selecting everything is how a small field change quietly overwrites a page layout somebody else spent a week on.</p>
+    </div>
+
+    <h4>What dependency checking will not catch</h4>
+    <ul>
+      <li><strong>Hard-coded IDs</strong> in formulas, flows, templates, or default values. IDs differ between orgs, so these break silently <em>after</em> a successful deployment.</li>
+      <li><strong>Features not enabled</strong> in the target org.</li>
+      <li><strong>Data</strong> — custom setting values, reference records, anything a user typed.</li>
+      <li><strong>Folders</strong> for reports, dashboards, and templates.</li>
+      <li><strong>Users, queues, or public groups</strong> referenced by rules, dashboards, or record owners.</li>
+      <li><strong>Record-type-specific picklist availability.</strong></li>
+      <li>Whether the change actually <em>works</em> for a real user.</li>
+    </ul>
+  </article>
+
+  <!-- STAGE 5 -->
+  <article class="card card--hazard stage">
+    <div class="stage__top">
+      <span class="stage__no">05</span>
+      <h3 class="stage__ttl">Write down the manual steps</h3>
+      <span class="stage__cnt" data-count></span>
+    </div>
+    <p class="stage__sub">The stage people skip, and the stage that causes the bad Monday. Some things simply don't travel in a change set. If they aren't written down, they don't happen.</p>
+
+    <div class="callout callout--stop">
+      <span class="callout__t">Keep two lists</span>
+      <p>What must happen <strong>before</strong> the deployment, and what must happen <strong>after</strong>. Both belong somewhere the deployer will actually see — the change set description should point at them.</p>
+    </div>
+
+    <h4>Picklist values and record types</h4>
+    <ul>
+      <li>New values on a <strong>custom</strong> picklist field travel with the field.</li>
+      <li>Values on <strong>standard</strong> picklist fields (Case Status, Opportunity Stage, Lead Source) frequently need adding by hand.</li>
+      <li><strong>Record type availability</strong> is the classic trap: the value deploys, but <em>which record types it's available for</em> often needs setting manually. Check every record type on the object, not just the one you worked in.</li>
+      <li>Assigning record types <strong>to profiles</strong> is manual. New record type, nobody can use it — that's usually why.</li>
+      <li><strong>Translations</strong> for new values don't come along.</li>
+    </ul>
+
+    <h4>Profiles, permission sets, field-level security</h4>
+    <ul>
+      <li>A profile carries <strong>only the settings for components in the same change set</strong>. Never a full copy.</li>
+      <li>Deploying a profile <strong>never removes</strong> permissions in the target. It only adds and updates.</li>
+      <li><strong>Permission sets deploy in full — assigning them to users is manual</strong>, every time.</li>
+      <li>Field-level security arrives only for fields in the set, only for profiles in the set. Verify per profile.</li>
+    </ul>
+    <div class="callout callout--caution">
+      <span class="callout__t">Test as a user, not an admin</span>
+      <p>After deploying, log in as a real user on each affected profile. Admins see everything, which makes them the worst possible testers of a visibility change.</p>
+    </div>
+
+    <h4>Flows, queues, and rules</h4>
+    <ul>
+      <li>A <strong>flow usually arrives inactive</strong>. It deploys active only if the org allows it (Setup → Process Automation Settings) <em>and</em> coverage requirements are met. Assume inactive and check.</li>
+      <li>Activating the new version doesn't always deactivate the old one. Confirm you don't have two flows racing on the same trigger.</li>
+      <li><strong>Queues</strong> deploy; <strong>membership</strong> — users and public groups — is usually manual.</li>
+      <li><strong>Assignment and escalation rules</strong>: the rule and entries deploy, <strong>activation is manual</strong>, one active rule per object, and entry <em>order</em> changes behaviour.</li>
+      <li><strong>Lightning record page</strong> activation and assignment normally needs redoing.</li>
+    </ul>
+
+    <h4>Custom settings vs custom metadata</h4>
+    <p>Worth learning once, because it explains deployments that succeed and do nothing:</p>
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th></th><th>Definition</th><th>The values</th></tr></thead>
+        <tbody>
+          <tr><td>Custom setting</td><td><span class="tag tag--yes">Deploys</span></td><td><span class="tag tag--no">Does not deploy</span> — it's data. Enter or load it manually.</td></tr>
+          <tr><td>Custom metadata type</td><td><span class="tag tag--yes">Deploys</span></td><td><span class="tag tag--part">Add as components</span> deliberately, then verify they arrived.</td></tr>
+          <tr><td>Reference data in objects</td><td>n/a</td><td><span class="tag tag--no">Never deploys</span> — needs a data load.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>The rest of the usual suspects</h4>
+    <ul>
+      <li><strong>Feature enablement</strong> in the target — a component depending on a switched-off feature fails to deploy at all.</li>
+      <li><strong>Folders</strong> for reports, dashboards, and email templates, plus their sharing.</li>
+      <li>A <strong>dashboard's running user</strong> must exist in the target.</li>
+      <li><strong>Scheduled jobs</strong> and scheduled Apex need re-scheduling.</li>
+      <li><strong>Integration secrets</strong> — connected apps, named credentials — never travel.</li>
+      <li><strong>Public group membership</strong> and sharing rule recalculation.</li>
+    </ul>
+
+    <h4>Checklist</h4>
+    <ul class="checks">
+      <li><label class="check"><input type="checkbox" data-k="s5a"><span>Pre-deployment list written, in order, with owners</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s5b"><span>Post-deployment list written, in order, with owners</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s5c"><span>Checked flows, queues, assignment rules for activation steps</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s5d"><span>Checked record type and picklist availability per profile</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s5e"><span>Checked custom settings and reference data that need populating</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s5f"><span>Runbook is where the deployer will find it, and linked from the change set description</span></label></li>
+    </ul>
+  </article>
+
+  <!-- STAGE 6 -->
+  <article class="card stage">
+    <div class="stage__top">
+      <span class="stage__no">06</span>
+      <h3 class="stage__ttl">Upload and validate</h3>
+      <span class="stage__cnt" data-count></span>
+    </div>
+    <p class="stage__sub">Upload from the source, then dry-run it in the target before anything real happens.</p>
+    <span class="path">Source: Outbound Change Sets → Upload  ·  Target: Inbound Change Sets</span>
+
+    <div class="callout callout--caution">
+      <span class="callout__t">Upload is a one-way door</span>
+      <p>The moment you upload, the change set is <strong>frozen</strong>. Need a change? Clone, adjust, bump the version, upload again.</p>
+    </div>
+
+    <p>In the target org the change set appears under <strong>Change Sets Awaiting Deployment</strong>, with three options: <strong>Validate</strong>, <strong>Deploy</strong>, <strong>Delete</strong>.</p>
+
+    <div class="callout callout--go">
+      <span class="callout__t">Always validate first</span>
+      <p><strong>Validate runs the entire deployment as a dry run and changes nothing.</strong> Same engine, same errors, no consequences. There is no good reason to skip it for Production. It buys you a complete error list while fixing is still cheap — and, if you ran tests, the option to Quick Deploy later.</p>
+    </div>
+
+    <h4>Test levels</h4>
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th>Option</th><th>What it runs</th><th>When</th></tr></thead>
+        <tbody>
+          <tr><td>Default</td><td>No tests in sandboxes. In Production, local tests run automatically if the set contains Apex.</td><td>Config-only changes to a sandbox.</td></tr>
+          <tr><td>Run local tests</td><td>Every test in your org, excluding managed packages.</td><td>The standard choice for Production.</td></tr>
+          <tr><td>Run all tests</td><td>Everything, managed packages included.</td><td>When a managed package is genuinely implicated. Slow.</td></tr>
+          <tr><td>Run specified tests</td><td>Only the classes you name.</td><td>Targeted checks — must still satisfy coverage rules.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout--stop" style="margin-top:16px">
+      <span class="callout__t">Coverage stops Production deployments dead</span>
+      <p>Production requires <strong>at least 75% Apex coverage</strong> overall, and every trigger needs some coverage. This is the most common hard stop, it needs developer work, and it cannot be solved on release night. Validate early enough that finding out is inconvenient rather than catastrophic.</p>
+    </div>
+
+    <h4>What validation does to the org</h4>
+    <p>While validation or deployment runs, Salesforce briefly locks <strong>Setup metadata</strong> so nobody changes config mid-check. <strong>Users keep working with data normally.</strong> Tell your admins not to touch config during the window; you don't need to tell users anything.</p>
+
+    <h4>Quick Deploy</h4>
+    <p>A successful validation that ran tests unlocks <strong>Quick Deploy</strong> on the Deployment Status page. It applies the already-validated components without re-running the test suite, turning an hours-long Production deployment into minutes.</p>
+    <ul>
+      <li><strong>It expires.</strong> The figure commonly cited for change sets is 96 hours (4 days); Salesforce CLI validations are documented as valid for 10 days. Don't build a plan on the exact number — validate close to release and confirm the button is still there before promising anyone a fast deployment.</li>
+      <li><strong>It disappears if relevant metadata changes</strong>, or if another deployment runs in between. Then you re-validate. That's normal, not a fault.</li>
+    </ul>
+    <div class="callout callout--note">
+      <span class="callout__t">The pattern that works</span>
+      <p>Validate during business hours, when colleagues are around to help fix errors. Quick Deploy in the evening, when the blast radius is smallest.</p>
+    </div>
+
+    <h4>Checklist</h4>
+    <ul class="checks">
+      <li><label class="check"><input type="checkbox" data-k="s6a"><span>Uploaded to the correct target org</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s6b"><span>Found it under Inbound Change Sets in the target</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s6c"><span><strong>Validated</strong>, with an appropriate test level</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s6d"><span>Validation passed — or every error resolved and re-validated</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s6e"><span>Told other admins not to make config changes during the window</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s6f"><span>Confirmed Quick Deploy is available, if the plan depends on it</span></label></li>
+    </ul>
+  </article>
+
+  <!-- STAGE 7 -->
+  <article class="card stage">
+    <div class="stage__top">
+      <span class="stage__no">07</span>
+      <h3 class="stage__ttl">Deploy and verify</h3>
+      <span class="stage__cnt" data-count></span>
+    </div>
+    <p class="stage__sub">Deployment success means the metadata was accepted. It does not mean the change works.</p>
+    <span class="path">Target: Inbound Change Sets → Deploy  ·  Monitor: Setup → Deployment Status</span>
+
+    <h4>Order of operations</h4>
+    <ul class="checks">
+      <li><label class="check"><input type="checkbox" data-k="s7a"><span>Go / no-go confirmed, and UAT sign-off actually exists</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s7b"><span><strong>Pre-deployment manual steps</strong> complete — feature enablement first, always</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s7c"><span>Deployed, or Quick Deployed from Deployment Status</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s7d"><span>Watched Deployment Status through to a result — no second deployment started</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s7e"><span><strong>Post-deployment manual steps</strong> complete</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s7f"><span>Logged in as a <strong>real user</strong> on each affected profile and ran the scenario end to end</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s7g"><span>New fields visible and editable to the people who need them</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s7h"><span>New automation fired once — and <strong>old automation confirmed not firing</strong> alongside it</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s7i"><span>Announced, and recorded in the release log</span></label></li>
+    </ul>
+
+    <div class="callout callout--note">
+      <span class="callout__t">It runs server-side</span>
+      <p>Closing your laptop doesn't stop a deployment. Don't start a second one — the org runs one at a time.</p>
+    </div>
+
+    <h4>If it goes wrong</h4>
+    <ul>
+      <li><strong>Failed deployment:</strong> nothing was applied. Read the errors, fix in the source, clone, bump the version, re-validate. Annoying, not dangerous.</li>
+      <li><strong>Succeeded but broken:</strong> the real risk. Deactivate the offending automation first — fastest way to stop harm — then work through your prepared reversal.</li>
+      <li><strong>Rollback:</strong> no undo exists. Your options are the reverse change set you built in advance, or manual reversal from your notes. Manual reversal without notes, under pressure, is how a small incident becomes a long one.</li>
+    </ul>
+    <div class="callout callout--caution">
+      <span class="callout__t">Twenty minutes well spent</span>
+      <p>For anything touching Production widely, build the reverse change set <em>before</em> you deploy. You'll be very glad of it roughly once a year.</p>
+    </div>
+  </article>
+</section>
+
+<!-- ============ COMPONENTS ============ -->
+<section class="panel" id="p-comp" role="tabpanel" aria-labelledby="t-comp" hidden>
+  <div class="sec-head">
+    <h2>Component reference</h2>
+    <p>What travels, and what to watch for. Search by component name or by symptom — "folder", "inactive", "assign".</p>
+  </div>
+  <div class="search">
+    <input type="search" id="cs" placeholder="Search components and gotchas…" aria-label="Search components">
+    <span class="search__c" id="cc"></span>
+  </div>
+  <div class="t-wrap">
+    <table id="ctab">
+      <thead><tr><th>Component</th><th>Travels with it</th><th>Watch out for</th></tr></thead>
+      <tbody>
+        <tr><td>Custom field</td><td>Custom picklist values on that field</td><td>Needs the page layout to be visible; field-level security per profile; a required field fails if it isn't on a deployed layout</td></tr>
+        <tr><td>Custom object</td><td>Nothing automatically</td><td>Add fields, layouts, tab, and app assignment separately</td></tr>
+        <tr><td>Page layout</td><td>Nothing</td><td>Assignments per profile and record type need the profile and record type in the set, or manual work</td></tr>
+        <tr><td>Record type</td><td>Nothing</td><td>Picklist value availability per record type is often manual; profile assignment is manual; layout assignment per record type is separate</td></tr>
+        <tr><td>Global value set</td><td>Its values</td><td>Standard picklist field values frequently need adding by hand</td></tr>
+        <tr><td>Profile</td><td>Only settings for components in the same set</td><td>Never a full copy; add profiles last; deploying never removes permissions</td></tr>
+        <tr><td>Permission set</td><td>Full contents</td><td>Assigning it to users is always manual</td></tr>
+        <tr><td>Flow</td><td>Nothing</td><td>Arrives inactive unless the org setting allows active deployment and coverage is met; deactivate the superseded version</td></tr>
+        <tr><td>Apex class / trigger</td><td>Nothing</td><td>75% coverage required for Production; every trigger needs coverage; Production runs tests</td></tr>
+        <tr><td>LWC / Aura component</td><td>Nothing</td><td>Check API versions and referenced Apex, objects, and fields</td></tr>
+        <tr><td>Validation rule</td><td>Nothing</td><td>Fails if it references a field not in the set</td></tr>
+        <tr><td>Email template</td><td>Nothing</td><td>The folder must exist; merge fields must resolve in the target</td></tr>
+        <tr><td>Report / dashboard</td><td>Nothing</td><td>Folder must exist; folder sharing is manual; a dashboard's running user must exist in the target</td></tr>
+        <tr><td>List view</td><td>Nothing</td><td>Sharing and visibility settings are worth re-checking</td></tr>
+        <tr><td>Custom setting</td><td>Definition only</td><td>Values are data and do not deploy — populate manually or load them</td></tr>
+        <tr><td>Custom metadata type</td><td>Definition; records can be added as components</td><td>Add records deliberately, then verify they arrived</td></tr>
+        <tr><td>Queue</td><td>Nothing</td><td>Membership is manual; confirm supported objects</td></tr>
+        <tr><td>Assignment / escalation rule</td><td>Rule entries</td><td>Activation is manual; one active rule per object; entry order changes behaviour</td></tr>
+        <tr><td>Lightning record page</td><td>Nothing</td><td>Activation and assignment usually manual</td></tr>
+        <tr><td>Sharing rule</td><td>Nothing</td><td>Recalculation and referenced groups need checking</td></tr>
+        <tr><td>Static resource</td><td>Nothing</td><td>Check size limits and anything referencing it by URL</td></tr>
+        <tr><td>Anything you want deleted</td><td>—</td><td>Not possible in a change set. Manual removal in the target, or a destructive-changes deployment</td></tr>
+      </tbody>
+    </table>
+    <div class="empty" id="ce">No component matches that search.</div>
+  </div>
+</section>
+
+<!-- ============ ERROR DECODER ============ -->
+<section class="panel" id="p-err" role="tabpanel" aria-labelledby="t-err" hidden>
+  <div class="sec-head">
+    <h2>Error decoder</h2>
+    <p>Paste a fragment of the error, or describe the symptom. Deployment errors are written for the platform, not for you — most map to something quite simple.</p>
+  </div>
+  <div class="search">
+    <input type="search" id="es" placeholder="Search error text or symptom…" aria-label="Search errors">
+    <span class="search__c" id="ec"></span>
+  </div>
+  <div id="elist">
+
+    <details class="err"><summary class="err__q">The target org isn't in the dropdown when I try to upload</summary>
+      <div class="err__a">
+        <span class="err__lbl">What it means</span>
+        <p>Inbound changes aren't authorised in the target org. Authorisation is granted by the receiver.</p>
+        <span class="err__lbl">Fix</span>
+        <p>In the <strong>target</strong>: Setup → Deployment Settings → Edit the connection → tick <strong>Allow Inbound Changes</strong> → Save.</p>
+      </div>
+    </details>
+
+    <details class="err"><summary class="err__q">This change set is closed / cannot be edited</summary>
+      <div class="err__a">
+        <span class="err__lbl">What it means</span>
+        <p>Expected behaviour. Uploading freezes a change set permanently.</p>
+        <span class="err__lbl">Fix</span>
+        <p><strong>Clone</strong> it, make your change, bump the version in the name, upload again.</p>
+      </div>
+    </details>
+
+    <details class="err"><summary class="err__q">In field: field — no CustomField named X found</summary>
+      <div class="err__a">
+        <span class="err__lbl">What it means</span>
+        <p>Something in the set references a field that isn't in the set and doesn't exist in the target.</p>
+        <span class="err__lbl">Fix</span>
+        <p>Add the field, re-run dependencies, clone and re-upload.</p>
+      </div>
+    </details>
+
+    <details class="err"><summary class="err__q">Field X must be included in the page layout (or other required-field errors)</summary>
+      <div class="err__a">
+        <span class="err__lbl">What it means</span>
+        <p>A field marked required at field level arrived without a layout that displays it.</p>
+        <span class="err__lbl">Fix</span>
+        <p>Add the page layout to the set — or reconsider whether the field needs to be required at field level rather than enforced by a validation rule.</p>
+      </div>
+    </details>
+
+    <details class="err"><summary class="err__q">An object of type Layout was named in layout assignment, but was not found</summary>
+      <div class="err__a">
+        <span class="err__lbl">What it means</span>
+        <p>The layout, or the record type the assignment depends on, is missing from the set.</p>
+        <span class="err__lbl">Fix</span>
+        <p>Add both the layout and the record type, then re-run dependencies.</p>
+      </div>
+    </details>
+
+    <details class="err"><summary class="err__q">Not available for deploy for this organization</summary>
+      <div class="err__a">
+        <span class="err__lbl">What it means</span>
+        <p>The target org doesn't have that feature enabled, or the edition differs.</p>
+        <span class="err__lbl">Fix</span>
+        <p>Enable the feature in the target <strong>first</strong>, as a pre-deployment manual step, then deploy. This is exactly the kind of thing that belongs on the pre-deployment list.</p>
+      </div>
+    </details>
+
+    <details class="err"><summary class="err__q">Average test coverage across all Apex classes is XX%, at least 75% is required</summary>
+      <div class="err__a">
+        <span class="err__lbl">What it means</span>
+        <p>Org-wide Apex coverage is below the Production threshold. Nothing about your change set is wrong — the org doesn't meet the bar.</p>
+        <span class="err__lbl">Fix</span>
+        <p>Developer work in the source org: writing or extending tests. <strong>This is not solvable on release night.</strong> Catch it by validating days ahead.</p>
+      </div>
+    </details>
+
+    <details class="err"><summary class="err__q">Test coverage of selected Apex trigger is 0%</summary>
+      <div class="err__a">
+        <span class="err__lbl">What it means</span>
+        <p>Every trigger needs some coverage of its own, independent of the org-wide figure.</p>
+        <span class="err__lbl">Fix</span>
+        <p>A test that exercises the trigger. Again — developer work, done ahead of time.</p>
+      </div>
+    </details>
+
+    <details class="err"><summary class="err__q">Another deployment is already in progress</summary>
+      <div class="err__a">
+        <span class="err__lbl">What it means</span>
+        <p>One deployment at a time per org.</p>
+        <span class="err__lbl">Fix</span>
+        <p>Check Setup → Deployment Status and wait for the running job. Don't cancel someone else's deployment without asking them.</p>
+      </div>
+    </details>
+
+    <details class="err"><summary class="err__q">Insufficient access rights on cross-reference id</summary>
+      <div class="err__a">
+        <span class="err__lbl">What it means</span>
+        <p>Something references a record, user, or owner that doesn't exist in the target org.</p>
+        <span class="err__lbl">Fix</span>
+        <p>Usually a dashboard running user, a queue member, or a folder owner. Create or remap it in the target.</p>
+      </div>
+    </details>
+
+    <details class="err"><summary class="err__q">Duplicate value found: field duplicates value on record</summary>
+      <div class="err__a">
+        <span class="err__lbl">What it means</span>
+        <p>A component with that API name already exists in the target, or a uniqueness constraint conflicts.</p>
+        <span class="err__lbl">Fix</span>
+        <p>Compare against the target org before re-uploading. Watch for a component created directly in the target by someone else.</p>
+      </div>
+    </details>
+
+    <details class="err"><summary class="err__q">Entity is not org-accessible / Entity 'X' not found</summary>
+      <div class="err__a">
+        <span class="err__lbl">What it means</span>
+        <p>The object or feature a component depends on is missing or not enabled in the target.</p>
+        <span class="err__lbl">Fix</span>
+        <p>Enable or create the dependency in the target first.</p>
+      </div>
+    </details>
+
+    <details class="err"><summary class="err__q">The Quick Deploy button has disappeared</summary>
+      <div class="err__a">
+        <span class="err__lbl">What it means</span>
+        <p>The validation expired, relevant metadata changed, or another deployment ran in between.</p>
+        <span class="err__lbl">Fix</span>
+        <p>Re-validate. Nothing is broken — this is the platform refusing to trust a stale result.</p>
+      </div>
+    </details>
+
+    <details class="err"><summary class="err__q">It deployed successfully, but users can't see the change</summary>
+      <div class="err__a">
+        <span class="err__lbl">What it means</span>
+        <p>The most common outcome of a "successful" deployment. The metadata arrived; visibility didn't.</p>
+        <span class="err__lbl">Work down this list in order</span>
+        <ol>
+          <li>Field-level security wasn't deployed, or the profile wasn't in the set</li>
+          <li>The field isn't on the page layout the user actually sees</li>
+          <li>A permission set was deployed but never assigned to anyone</li>
+          <li>A record type isn't assigned to their profile</li>
+          <li>A flow arrived inactive</li>
+          <li>A custom setting is empty in the target</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="err"><summary class="err__q">The automation ran twice / the old version is still firing</summary>
+      <div class="err__a">
+        <span class="err__lbl">What it means</span>
+        <p>Activating a new flow version doesn't necessarily deactivate the previous one, and an old rule may still be active alongside the new one.</p>
+        <span class="err__lbl">Fix</span>
+        <p>Check which versions are active on the object. Deactivate the superseded version. This belongs on the post-deployment list so it never becomes a surprise.</p>
+      </div>
+    </details>
+
+    <details class="err"><summary class="err__q">I need to remove a field from Production and the change set won't do it</summary>
+      <div class="err__a">
+        <span class="err__lbl">What it means</span>
+        <p>Change sets add and update only. Deletion is not a capability they have.</p>
+        <span class="err__lbl">Fix</span>
+        <p>Delete it manually in the target, or use a destructive-changes deployment through the Metadata API. Either way it's a deliberate, recorded step — not something to do quietly.</p>
+      </div>
+    </details>
+
+  </div>
+  <div class="empty" id="ee">No error matches that search.</div>
+</section>
+
+<!-- ============ TEMPLATES ============ -->
+<section class="panel" id="p-tpl" role="tabpanel" aria-labelledby="t-tpl" hidden>
+  <div class="sec-head">
+    <h2>Templates</h2>
+    <p>Copy, paste, fill in. The runbook is the one that matters most — it's the difference between a deployment and a hope.</p>
+  </div>
+
+  <div class="tpl">
+    <div class="tpl__h">
+      <h3 class="tpl__n">A · Deployment request</h3>
+      <button class="copy" type="button" data-copy="tpl-a">Copy</button>
+    </div>
+    <p class="tpl__d">For BAs, PMs, and anyone asking for a deployment rather than performing one.</p>
+    <pre id="tpl-a">DEPLOYMENT REQUEST
+
+Ticket / work item:
+Requested by:
+Target environment:        Dev → UAT  /  UAT → Production
+Requested window:
+
+WHAT IS CHANGING
+(One paragraph in plain language. What will users notice?)
+
+WHY NOW
+(Business driver, any deadline, what happens if it slips.)
+
+COMPONENTS I KNOW ABOUT
+(Best-effort list. The admin will confirm and complete it.)
+-
+-
+
+WHO IS AFFECTED
+Profiles / teams:
+User communication needed?   Yes / No
+Training or documentation needed?   Yes / No
+
+HOW WE KNOW IT WORKED
+(Specific and testable. "A support agent can set Case Priority to
+Urgent and the case routes to the Tier 2 queue within a minute.")
+-
+
+UAT SIGN-OFF
+Signed off by:
+Date:
+Evidence / link:
+
+RISK
+Reversible?   Yes / No / Partly
+If this breaks in Production, the immediate mitigation is:</pre>
+  </div>
+
+  <div class="tpl">
+    <div class="tpl__h">
+      <h3 class="tpl__n">B · Manual steps runbook</h3>
+      <button class="copy" type="button" data-copy="tpl-b">Copy</button>
+    </div>
+    <p class="tpl__d">Attach to every deployment. Point at it from the change set description.</p>
+    <pre id="tpl-b">MANUAL STEPS — &lt;change set name and version&gt;
+Deployer:                          Date:
+
+BEFORE DEPLOYMENT
+#   Step                                  Where          Owner   Done
+1   Enable &lt;feature&gt;                      Setup → ...            [ ]
+2   Confirm reverse change set prepared                          [ ]
+3
+4
+
+DEPLOY
+    Validate against target                                      [ ]
+    Validation result: PASS / FAIL       Errors resolved: [ ]
+    Deploy / Quick Deploy                Time started:
+    Deployment Status: SUCCEEDED / FAILED
+
+AFTER DEPLOYMENT
+#   Step                                  Where          Owner   Done
+1   Activate flow &lt;name&gt;, deactivate v&lt;n&gt;                        [ ]
+2   Assign permission set &lt;name&gt; to &lt;group&gt;                      [ ]
+3   Add picklist values to standard field &lt;name&gt;                 [ ]
+4   Make record type &lt;name&gt; available to profiles &lt;...&gt;          [ ]
+5   Populate custom setting &lt;name&gt;                               [ ]
+6   Add members to queue &lt;name&gt;                                  [ ]
+7   Activate assignment rule &lt;name&gt;, confirm entry order         [ ]
+8   Re-schedule job &lt;name&gt;                                       [ ]
+9
+
+SMOKE TEST
+Logged in as real user on profile:                Result:
+Logged in as real user on profile:                Result:
+End-to-end scenario tested:                       Result:
+Old automation confirmed not firing:              Result:
+
+OUTCOME
+Complete / Rolled back / Partial — notes:</pre>
+  </div>
+
+  <div class="tpl">
+    <div class="tpl__h">
+      <h3 class="tpl__n">C · Release note</h3>
+      <button class="copy" type="button" data-copy="tpl-c">Copy</button>
+    </div>
+    <p class="tpl__d">Short enough that people read it. Written for colleagues who don't know what a change set is.</p>
+    <pre id="tpl-c">RELEASE NOTE — &lt;date&gt;
+
+WHAT CHANGED
+&lt;One or two sentences a non-Salesforce colleague would understand.&gt;
+
+WHO IT AFFECTS
+&lt;Teams and profiles.&gt;
+
+WHAT YOU NEED TO DO
+&lt;Nothing, or the specific action.&gt;
+
+DETAIL
+Ticket:
+Change set:
+Deployed by:                 Approved by:
+Manual steps runbook:
+
+IF SOMETHING LOOKS WRONG
+Contact:                     Known issues:</pre>
+  </div>
+</section>
+
+<!-- ============ GOVERNANCE ============ -->
+<section class="panel" id="p-gov" role="tabpanel" aria-labelledby="t-gov" hidden>
+  <div class="sec-head">
+    <h2>Governance and safety rails</h2>
+    <p>Mechanics keep a deployment correct. These keep it survivable.</p>
+  </div>
+
+  <div class="card">
+    <h4>Who can deploy to Production</h4>
+    <p>Keep the list short and named; everyone else requests. The person who built the change set shouldn't be its only reviewer, and ideally isn't the person who approves it. Deploying needs the <strong>Deploy Change Sets</strong> permission in the target org — grant it deliberately rather than by accident.</p>
+
+    <h4>Deployment windows</h4>
+    <ul>
+      <li><strong>Good:</strong> early-to-mid week, outside business hours, with the deployer available afterwards.</li>
+      <li><strong>Bad:</strong> Friday afternoon. Month-end and quarter-end in sales-heavy orgs. The day before a holiday. Any time nobody who understands the change is reachable.</li>
+      <li><strong>Freeze periods:</strong> agree in advance when nothing ships — quarter-end close, major campaigns, the week a Salesforce seasonal release lands in your org.</li>
+    </ul>
+    <div class="callout callout--note">
+      <span class="callout__t">The shape that works</span>
+      <p>Validation during business hours gets you help. Deployment out of hours gets you safety. Do both.</p>
+    </div>
+
+    <h4>Test levels and rollback, decided in advance</h4>
+    <ul>
+      <li><strong>Run local tests</strong> is the default choice for Production. Reach for <em>Run all tests</em> only when a managed package is genuinely implicated.</li>
+      <li>Validate far enough ahead that a <strong>coverage failure</strong> is an inconvenience rather than a cancelled release.</li>
+      <li><strong>Rollback is not a feature.</strong> For anything touching Production widely, build the reverse change set before you deploy. For automation, know which switch you'd flip to stop the harm.</li>
+      <li>Write down what "we abandon this" looks like <em>before</em> you're in it — usually a time limit rather than a diagnosis.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h4>Go / no-go — nothing ships to Production until all are true</h4>
+    <ul class="checks">
+      <li><label class="check"><input type="checkbox" data-k="g1"><span>UAT sign-off recorded, <strong>by name</strong></span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="g2"><span>Validated successfully against Production</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="g3"><span>Pre- and post-deployment manual steps written down, in order</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="g4"><span>Rollback plan decided — and prepared, for wide-reaching changes</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="g5"><span>Deployment window agreed and inside policy</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="g6"><span>Named approver has said go</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="g7"><span>Someone who understands the change is available afterwards</span></label></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h4>Keep a release log</h4>
+    <p>One row per deployment: date, change set name and version, ticket, who deployed, who approved, manual steps completed, outcome.</p>
+    <p>When something breaks three weeks later, this is the first thing you'll want — and the last thing you'll have if you never started it.</p>
+  </div>
+</section>
+
+<!-- ============ CHEAT SHEET ============ -->
+<section class="panel" id="p-cheat" role="tabpanel" aria-labelledby="t-cheat" hidden>
+  <div class="sec-head">
+    <h2>Cheat sheet</h2>
+    <p>Everything that fits on one page. Print it, pin it, ignore the rest of this handbook until something goes wrong.</p>
+  </div>
+  <div class="print-row">
+    <button class="btn" type="button" onclick="window.print()">Print this page</button>
+  </div>
+
+  <div class="cheat-grid">
+    <div class="cheat">
+      <h3>Setup paths</h3>
+      <dl>
+        <dt>Authorise inbound — in the target org</dt>
+        <dd>Setup → Deployment Settings</dd>
+        <dt>Build and upload — source org</dt>
+        <dd>Setup → Outbound Change Sets</dd>
+        <dt>Validate and deploy — target org</dt>
+        <dd>Setup → Inbound Change Sets</dd>
+        <dt>Monitor, and Quick Deploy</dt>
+        <dd>Setup → Deployment Status</dd>
+        <dt>Allow flows to deploy active</dt>
+        <dd>Setup → Process Automation Settings</dd>
+      </dl>
+    </div>
+
+    <div class="cheat">
+      <h3>The seven stages</h3>
+      <ol>
+        <li><strong>Connect</strong> — in the <em>target</em>, allow inbound from the source. One-directional.</li>
+        <li><strong>Create</strong> — versioned name, real description.</li>
+        <li><strong>Add</strong> — one type at a time. Profiles last.</li>
+        <li><strong>Dependencies</strong> — add what you need, exclude what would overwrite, re-run after changes.</li>
+        <li><strong>Manual steps</strong> — two written lists, before and after.</li>
+        <li><strong>Upload and validate</strong> — upload freezes it. Always validate.</li>
+        <li><strong>Deploy and verify</strong> — pre-steps, deploy, post-steps, smoke test as a real user, log it.</li>
+      </ol>
+    </div>
+
+    <div class="cheat">
+      <h3>Golden rules</h3>
+      <ol>
+        <li>Change sets <strong>add and update only</strong>. Never delete.</li>
+        <li><strong>The receiving org authorises inbound.</strong></li>
+        <li><strong>Uploading freezes</strong> the set. Clone to change it.</li>
+        <li><strong>Add profiles last</strong> — they only carry settings for components in the set.</li>
+        <li><strong>Validate first</strong>, every time, into Production.</li>
+        <li><strong>All-or-nothing</strong> — one failure means nothing deployed.</li>
+        <li><strong>There is no undo.</strong> Prepare the reversal before you need it.</li>
+        <li><strong>Test as a real user, not as an admin.</strong></li>
+      </ol>
+    </div>
+
+    <div class="cheat">
+      <h3>Never travels in a change set</h3>
+      <ul>
+        <li>Data of any kind — including <strong>custom setting values</strong></li>
+        <li>Deletions</li>
+        <li>Permission set <strong>assignments</strong> to users</li>
+        <li><strong>Record type assignment</strong> to profiles</li>
+        <li>Standard picklist values (usually)</li>
+        <li>Flow <strong>activation</strong> (usually) — and the old version stays active</li>
+        <li>Queue <strong>membership</strong>; assignment rule <strong>activation</strong></li>
+        <li>Integration secrets, named credentials, scheduled jobs</li>
+        <li>Report, dashboard, and template <strong>folders</strong> you forgot to include</li>
+      </ul>
+    </div>
+
+    <div class="cheat">
+      <h3>Go / no-go</h3>
+      <ul>
+        <li>UAT signed off, by name</li>
+        <li>Validated against the target</li>
+        <li>Manual steps written — before and after</li>
+        <li>Rollback plan decided</li>
+        <li>Window agreed, approver said go</li>
+        <li>Someone who understands the change is around afterwards</li>
+      </ul>
+    </div>
+
+    <div class="cheat">
+      <h3>Deployed fine, nobody sees it</h3>
+      <p style="margin:0 0 10px;font-size:14px;color:var(--ink-mid)">Check in this order:</p>
+      <ol>
+        <li>Field-level security / profile not in the set</li>
+        <li>Field not on the layout the user sees</li>
+        <li>Permission set deployed but not assigned</li>
+        <li>Record type not assigned to the profile</li>
+        <li>Flow inactive</li>
+        <li>Custom setting empty</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Deployment path: Dev → UAT / Full → Production. Change sets add and update only; they never delete, and there is no undo.</p>
+  <p>Salesforce moves the furniture from time to time — if a Setup path or a limit here doesn't match what's in front of you, trust the org and update this guide.</p>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- tabs ---------- */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  function select(tab){
+    tabs.forEach(function(t){
+      var on = t === tab;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+    window.scrollTo({top:0, behavior:'auto'});
+  }
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){ select(t); });
+    t.addEventListener('keydown', function(e){
+      var i = tabs.indexOf(t), n = null;
+      if(e.key === 'ArrowRight') n = tabs[(i+1) % tabs.length];
+      if(e.key === 'ArrowLeft')  n = tabs[(i-1+tabs.length) % tabs.length];
+      if(n){ e.preventDefault(); n.focus(); select(n); }
+    });
+  });
+
+  /* ---------- progress, with persistence where available ---------- */
+  var KEY = 'sf-changeset-guide:v1';
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('input[type=checkbox][data-k]'));
+  var fill = document.getElementById('fill');
+  var mtxt = document.getElementById('mtxt');
+  var state = {};
+  var canPersist = typeof window.storage !== 'undefined' && window.storage && typeof window.storage.get === 'function';
+
+  function render(){
+    var done = boxes.filter(function(b){ return b.checked; }).length;
+    var pct = boxes.length ? Math.round(done / boxes.length * 100) : 0;
+    fill.style.width = pct + '%';
+    mtxt.textContent = done + ' of ' + boxes.length + ' steps · ' + pct + '%';
+    document.querySelectorAll('.stage, .card').forEach(function(card){
+      var cnt = card.querySelector('[data-count]');
+      if(!cnt) return;
+      var local = Array.prototype.slice.call(card.querySelectorAll('input[type=checkbox][data-k]'));
+      if(!local.length){ cnt.textContent = ''; return; }
+      var d = local.filter(function(b){ return b.checked; }).length;
+      cnt.textContent = d + '/' + local.length;
+      cnt.classList.toggle('done', d === local.length);
+    });
+  }
+
+  var saveTimer = null;
+  function save(){
+    if(!canPersist) return;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function(){
+      try { window.storage.set(KEY, JSON.stringify(state)); }
+      catch(e){ /* progress stays in memory for this session */ }
+    }, 250);
+  }
+
+  boxes.forEach(function(b){
+    b.addEventListener('change', function(){
+      state[b.getAttribute('data-k')] = b.checked;
+      render();
+      save();
+    });
+  });
+
+  document.getElementById('reset').addEventListener('click', function(){
+    boxes.forEach(function(b){ b.checked = false; });
+    state = {};
+    render();
+    if(canPersist){
+      try { window.storage.delete(KEY); } catch(e){}
+    }
+  });
+
+  (function load(){
+    if(!canPersist){
+      document.getElementById('snote').classList.add('show');
+      render();
+      return;
+    }
+    Promise.resolve()
+      .then(function(){ return window.storage.get(KEY); })
+      .then(function(res){
+        if(res && res.value){
+          state = JSON.parse(res.value) || {};
+          boxes.forEach(function(b){
+            if(state[b.getAttribute('data-k')]) b.checked = true;
+          });
+        }
+      })
+      .catch(function(){ state = {}; })
+      .then(render);
+  })();
+
+  /* ---------- component table search ---------- */
+  var cs = document.getElementById('cs');
+  var crows = Array.prototype.slice.call(document.querySelectorAll('#ctab tbody tr'));
+  var cc = document.getElementById('cc'), ce = document.getElementById('ce');
+  function filterComp(){
+    var q = cs.value.trim().toLowerCase(), shown = 0;
+    crows.forEach(function(r){
+      var hit = !q || r.textContent.toLowerCase().indexOf(q) > -1;
+      r.style.display = hit ? '' : 'none';
+      if(hit) shown++;
+    });
+    cc.textContent = shown + ' of ' + crows.length + ' components';
+    ce.classList.toggle('show', shown === 0);
+  }
+  cs.addEventListener('input', filterComp);
+  filterComp();
+
+  /* ---------- error decoder search ---------- */
+  var es = document.getElementById('es');
+  var errs = Array.prototype.slice.call(document.querySelectorAll('#elist .err'));
+  var ec = document.getElementById('ec'), ee = document.getElementById('ee');
+  function filterErr(){
+    var q = es.value.trim().toLowerCase(), shown = 0;
+    errs.forEach(function(d){
+      var hit = !q || d.textContent.toLowerCase().indexOf(q) > -1;
+      d.style.display = hit ? '' : 'none';
+      if(hit){ shown++; if(q.length > 2) d.open = true; }
+    });
+    ec.textContent = shown + ' of ' + errs.length + ' entries';
+    ee.classList.toggle('show', shown === 0);
+  }
+  es.addEventListener('input', filterErr);
+  filterErr();
+
+  /* ---------- copy buttons ---------- */
+  document.querySelectorAll('.copy').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var txt = document.getElementById(btn.getAttribute('data-copy')).textContent;
+      function ok(){
+        var was = btn.textContent;
+        btn.textContent = 'Copied';
+        btn.classList.add('ok');
+        setTimeout(function(){ btn.textContent = was; btn.classList.remove('ok'); }, 1600);
+      }
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(ok, fallback);
+      } else { fallback(); }
+      function fallback(){
+        var ta = document.createElement('textarea');
+        ta.value = txt;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); ok(); }
+        catch(e){ btn.textContent = 'Select and copy'; }
+        document.body.removeChild(ta);
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

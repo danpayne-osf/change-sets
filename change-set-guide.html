@@ -1231,7 +1231,33 @@ Contact:                     Known issues:</pre>
   var fill = document.getElementById('fill');
   var mtxt = document.getElementById('mtxt');
   var state = {};
-  var canPersist = typeof window.storage !== 'undefined' && window.storage && typeof window.storage.get === 'function';
+
+  /* Three-tier persistence so this file works wherever it's opened:
+     1. window.storage — present when viewed inside Claude
+     2. localStorage   — when served over http(s), e.g. GitHub Pages
+     3. memory only    — opened straight off the filesystem in some browsers */
+  var store = (function(){
+    if(typeof window.storage !== 'undefined' && window.storage && typeof window.storage.get === 'function'){
+      return {
+        kind:'host',
+        get:  function(k){ return Promise.resolve(window.storage.get(k)).then(function(r){ return r && r.value; }); },
+        set:  function(k,v){ return Promise.resolve(window.storage.set(k,v)); },
+        del:  function(k){ return Promise.resolve(window.storage.delete(k)); }
+      };
+    }
+    try {
+      var probe = '__cs_probe__';
+      window.localStorage.setItem(probe,'1');
+      window.localStorage.removeItem(probe);
+      return {
+        kind:'local',
+        get:  function(k){ return Promise.resolve(window.localStorage.getItem(k)); },
+        set:  function(k,v){ window.localStorage.setItem(k,v); return Promise.resolve(); },
+        del:  function(k){ window.localStorage.removeItem(k); return Promise.resolve(); }
+      };
+    } catch(e){ return null; }
+  })();
+  var canPersist = !!store;
 
   function render(){
     var done = boxes.filter(function(b){ return b.checked; }).length;
@@ -1254,7 +1280,7 @@ Contact:                     Known issues:</pre>
     if(!canPersist) return;
     clearTimeout(saveTimer);
     saveTimer = setTimeout(function(){
-      try { window.storage.set(KEY, JSON.stringify(state)); }
+      try { store.set(KEY, JSON.stringify(state)); }
       catch(e){ /* progress stays in memory for this session */ }
     }, 250);
   }
@@ -1272,7 +1298,7 @@ Contact:                     Known issues:</pre>
     state = {};
     render();
     if(canPersist){
-      try { window.storage.delete(KEY); } catch(e){}
+      try { store.del(KEY); } catch(e){}
     }
   });
 
@@ -1283,10 +1309,10 @@ Contact:                     Known issues:</pre>
       return;
     }
     Promise.resolve()
-      .then(function(){ return window.storage.get(KEY); })
-      .then(function(res){
-        if(res && res.value){
-          state = JSON.parse(res.value) || {};
+      .then(function(){ return store.get(KEY); })
+      .then(function(raw){
+        if(raw){
+          state = JSON.parse(raw) || {};
           boxes.forEach(function(b){
             if(state[b.getAttribute('data-k')]) b.checked = true;
           });

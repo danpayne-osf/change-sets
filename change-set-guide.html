@@ -304,7 +304,7 @@ a{color:var(--blue)}
   <h1>Change Set<br>Deployment
     <span class="thin">Quick reference handbook</span>
   </h1>
-  <p class="lede">A change set moves configuration between related Salesforce orgs. It carries no data, and it cannot delete anything. Work down the stages in order — the checklist remembers where you got to.</p>
+  <p class="lede">A change set moves configuration between related Salesforce orgs. It carries no data, and it cannot delete anything. Use this as a reference and checklist for working through a change set deployment.</p>
 
   <div class="strip" role="img" aria-label="Deployment path: Dev sandbox, then UAT or Full sandbox, then Production">
     <div class="leg">
@@ -329,7 +329,7 @@ a{color:var(--blue)}
     <span class="meter__txt" id="mtxt">0 of 0 steps</span>
     <button class="meter__reset" id="reset" type="button">Reset run</button>
   </div>
-  <p class="storage-note" id="snote">Progress is kept for this session only — this copy of the file can't save state.</p>
+  <p class="storage-note" id="snote">Progress is kept for this session only — leaving this page will restart your run.</p>
 </header>
 
 <nav class="tabs" role="tablist" aria-label="Guide sections">
@@ -346,32 +346,32 @@ a{color:var(--blue)}
 
   <div class="sec-head">
     <h2>Before you start</h2>
-    <p>Five facts that explain most of the trouble people have with change sets. Read them once and a lot of confusing behaviour stops being confusing.</p>
+    <p>Change sets are a way to move metadata between Salesforce orgs. Change sets are good at moving a lot of standard configuration changes but are not always the right tool for every job. Here are some things to understand before you use a change set for your deployment.</p>
   </div>
 
   <div class="card">
-    <h4>The five things that surprise everyone</h4>
+    <h4>Five points about change sets</h4>
     <ul>
-      <li><strong>Change sets add and update. They never delete.</strong> Removing a field, layout, or rule from Production is a manual job, done by hand in Production, after the deployment.</li>
-      <li><strong>They only work between related orgs</strong> — a Production org and the sandboxes refreshed from it. Never a client org, a partner org, or an unrelated Developer Edition org.</li>
-      <li><strong>Once you upload, the change set is frozen.</strong> You cannot add a forgotten component. You clone it, add the component, and upload again — which is why version numbers belong in the name.</li>
-      <li><strong>A deployment is all-or-nothing.</strong> One component fails, nothing is applied. That's a safety net, not a bug.</li>
-      <li><strong>There is no undo.</strong> "Rollback" means a reverse change set you built in advance, or manual reversal. Decide before you deploy.</li>
+      <li><strong>Change sets add and update. They never delete.</strong> Removing a field, layout, or rule from Production is a manual job, done manually in Production, after the deployment.</li>
+      <li><strong>They only work between related orgs</strong> — this is typically a Production org and the sandboxes refreshed from it. Connections must be enabled between these orgs.</li>
+      <li><strong>Once you 'upload', the change set is frozen.</strong> You cannot add a forgotten component. You will need to clone the frozen change set, add the component, and upload again — it is a good idea to use version numbers in the change set name.</li>
+      <li><strong>A deployment is all-or-nothing.</strong> If one component fails to deploy the entire change set package is not applied. This is a feature.</li>
+      <li><strong>There is no undo.</strong> A "rollback" means a <em>reverse</em> change set you built in advance, or manual unpicking. Have a plan before you deploy.</li>
     </ul>
 
     <h4>When a change set is the wrong tool</h4>
-    <p>Recognising these early saves a wasted afternoon. In each case, escalate rather than forcing it:</p>
+    <p>Recognising these early can save wasted time and frustration:</p>
     <ul>
       <li><strong>You need to delete something.</strong> Change sets can't. Manual removal, or a destructive-changes deployment through the Metadata API.</li>
       <li><strong>You're renaming an API name.</strong> Deploys as a new component and leaves the old one behind.</li>
-      <li><strong>The release is very large.</strong> Hundreds of components are unmanageable to assemble and impossible to review by hand.</li>
-      <li><strong>The same package goes to several unrelated orgs.</strong> One org family, one target per upload.</li>
-      <li><strong>You need version history or an audit trail.</strong> A change set records what moved, not what changed or who changed it.</li>
+      <li><strong>The release is very large.</strong> Hundreds of components are unmanageable to assemble and very difficult to review by hand. Break it into smaller chunks.</li>
+      <li><strong>The same package goes to several unrelated orgs.</strong> One org 'family', one target per upload.</li>
+      <li><strong>You need detailed version history or an audit trail.</strong> A change set records what moved. Included components will show a 'last modified by' until the next update.</li>
       <li><strong>An emergency fix that must be revertible on demand.</strong></li>
     </ul>
     <div class="callout callout--note">
-      <span class="callout__t">Where to go instead</span>
-      <p>Those cases want a source-driven tool — Salesforce CLI with version control, or a product like Gearset or Copado. Setting that up is a separate conversation. The skill worth having today is noticing when the change set is the wrong shape for the job.</p>
+      <span class="callout__t">What to do instead</span>
+      <p>Those cases want a source-driven tool — Salesforce CLI with version control, or a product like Gearset or Copado. It is worth considering when the change set is the wrong shape for the job.</p>
     </div>
 
     <h4>Who does what</h4>
@@ -388,13 +388,13 @@ a{color:var(--blue)}
     </div>
     <div class="callout callout--caution" style="margin-top:16px">
       <span class="callout__t">Missing Deploy button?</span>
-      <p>Deploying needs the <strong>Deploy Change Sets</strong> permission (or Modify All Data) in the <em>target</em> org. That's almost always the reason.</p>
+      <p>Deploying needs the <strong>Deploy Change Sets</strong> permission (or Modify All Data) in the <em>target</em> org.</p>
     </div>
   </div>
 
   <div class="sec-head" style="margin-top:40px">
     <h2>The seven stages</h2>
-    <p>In order, every time. Tick as you go.</p>
+    <p>The typical stages required to deploy a change set.</p>
   </div>
 
   <!-- STAGE 1 -->
@@ -408,23 +408,23 @@ a{color:var(--blue)}
     <span class="path">Setup → Quick Find → Deployment Settings</span>
 
     <div class="callout callout--stop">
-      <span class="callout__t">The rule that catches everyone</span>
+      <span class="callout__t">Receiving org must grant permission</span>
       <p><strong>The receiving org grants permission, not the sending org.</strong> Authorisation is one-directional. Sending Dev → UAT means logging into <strong>UAT</strong> and allowing inbound changes from Dev.</p>
     </div>
 
     <h4>Steps — Dev to UAT</h4>
     <ul class="checks">
-      <li><label class="check"><input type="checkbox" data-k="s1a"><span>Log into <strong>UAT</strong> — the target, not the source</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s1a"><span>Log into <strong>UAT</strong> — the target</span></label></li>
       <li><label class="check"><input type="checkbox" data-k="s1b"><span>Setup → <strong>Deployment Settings</strong></span></label></li>
       <li><label class="check"><input type="checkbox" data-k="s1c"><span>Find <strong>Dev</strong> in the connection list and click <strong>Edit</strong></span></label></li>
       <li><label class="check"><input type="checkbox" data-k="s1d"><span>Tick <strong>Allow Inbound Changes</strong>, then Save</span></label></li>
-      <li><label class="check"><input type="checkbox" data-k="s1e"><span>Repeat in <strong>Production</strong> for the UAT connection — well before release day, not during the window</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s1e"><span>Repeat in <strong>Production</strong> for the UAT connection — this can be done before the actual release to confirm connectivity</span></label></li>
     </ul>
 
     <h4>If this stage misbehaves</h4>
     <ul>
       <li><strong>The target isn't in the dropdown when I upload.</strong> Inbound changes aren't authorised in the target. Go tick the box there.</li>
-      <li><strong>The org isn't in Deployment Settings at all.</strong> It isn't in this org family — change sets won't work.</li>
+      <li><strong>The org isn't in Deployment Settings at all.</strong> It isn't a related org — change sets won't work.</li>
       <li><strong>It worked last month, not now.</strong> The target sandbox was refreshed. Re-authorise.</li>
     </ul>
   </article>
@@ -436,7 +436,7 @@ a{color:var(--blue)}
       <h3 class="stage__ttl">Create the outbound change set</h3>
       <span class="stage__cnt" data-count></span>
     </div>
-    <p class="stage__sub">In the source org. Naming and description are not admin overhead — they're the only context the person deploying will have.</p>
+    <p class="stage__sub">In the source org. Naming and description are not admin overhead — they are the context the person deploying will have.</p>
     <span class="path">Setup → Quick Find → Outbound Change Sets → New</span>
 
     <h4>Name it so the next person understands it</h4>

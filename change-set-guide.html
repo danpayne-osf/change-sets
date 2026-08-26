@@ -394,7 +394,7 @@ a{color:var(--blue)}
 
   <div class="sec-head" style="margin-top:40px">
     <h2>The steps</h2>
-    <p>Thse are the typical steps required to deploy a change set. This example considers deploying from a Dev org to an org we call UAT.</p>
+    <p>Thse are the typical steps required to deploy a change set. This example considers deploying from an org called <em><strong>Dev</strong> to an org called <em><strong>UAT</strong></em>>.</p>
   </div>
 
   <!-- STAGE 1 -->
@@ -404,12 +404,12 @@ a{color:var(--blue)}
       <h3 class="stage__ttl">Connect the environments</h3>
       <span class="stage__cnt" data-count></span>
     </div>
-    <p class="stage__sub">Done once per pair of orgs. A refreshed sandbox is effectively a new org, so it needs doing again.</p>
     <span class="path">Setup → Quick Find → Deployment Settings</span>
+    <p class="stage__sub">Done once per pair of orgs. A refreshed sandbox is effectively a new org, so it needs doing again.</p>
 
     <div class="callout callout--stop">
       <span class="callout__t">Receiving org must grant permission</span>
-      <p><strong>The receiving org grants permission, not the sending org.</strong> Authorisation is one-directional. Sending Dev → UAT means logging into <strong>UAT</strong> and allowing inbound changes from Dev.</p>
+      <p><strong>The receiving org grants permission to deploy to it.</strong> Authorisation is one-directional. Sending Dev → UAT means logging into <strong>UAT</strong> and allowing inbound changes from Dev.</p>
     </div>
 
     <h4>Steps — Dev to UAT</h4>
@@ -418,12 +418,12 @@ a{color:var(--blue)}
       <li><label class="check"><input type="checkbox" data-k="s1b"><span>Setup → <strong>Deployment Settings</strong></span></label></li>
       <li><label class="check"><input type="checkbox" data-k="s1c"><span>Find <strong>Dev</strong> in the connection list and click <strong>Edit</strong></span></label></li>
       <li><label class="check"><input type="checkbox" data-k="s1d"><span>Tick <strong>Allow Inbound Changes</strong>, then Save</span></label></li>
-      <li><label class="check"><input type="checkbox" data-k="s1e"><span>Repeat in <strong>Production</strong> for the UAT connection — this can be done before the actual release to confirm connectivity</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s1e"><span>Repeat in any other orgs that need to be connected, eg. allowing a Production org to receive change sets from UAT. This step can be done any time and only needs to be done once.</span></label></li>
     </ul>
 
     <h4>If this stage misbehaves</h4>
     <ul>
-      <li><strong>The target isn't in the dropdown when I upload.</strong> Inbound changes aren't authorised in the target. Go tick the box there.</li>
+      <li><strong>The target isn't in the dropdown when I upload.</strong> Inbound changes aren't authorised in the target..</li>
       <li><strong>The org isn't in Deployment Settings at all.</strong> It isn't a related org — change sets won't work.</li>
       <li><strong>It worked last month, not now.</strong> The target sandbox was refreshed. Re-authorise.</li>
     </ul>
@@ -436,29 +436,23 @@ a{color:var(--blue)}
       <h3 class="stage__ttl">Create the outbound change set</h3>
       <span class="stage__cnt" data-count></span>
     </div>
-    <p class="stage__sub">In the source org. Naming and description are not admin overhead — they are the context the person deploying will have.</p>
     <span class="path">Setup → Quick Find → Outbound Change Sets → New</span>
+    <p class="stage__sub">Naming and description are necessary and useful context for the person deploying and are helpful for an audit trail.</p>
 
     <h4>Name it so the next person understands it</h4>
-    <p>Uploaded change sets freeze and get cloned, so a version number saves you from three change sets called "Case Changes", some examples:</p>
+    <p>Uploaded change sets freeze and get cloned, a version number saves you from three change sets called "Case Changes", some examples:</p>
     <pre style="border-top:0;border:1px solid var(--rule);border-radius:2px;margin:0 0 16px">
 CRM-4412_case-routing v1
 2026-Aug Deployment v2
-CRM-Sprint-1 v1</pre>
+CRM-Sprint-1 v1.1</pre>
 
     <h4>Checklist</h4>
     <ul class="checks">
       <li><label class="check"><input type="checkbox" data-k="s2a"><span>Confirm the source sandbox is <strong>not scheduled for refresh</strong> — a refresh destroys the change sets inside it</span></label></li>
-      <li><label class="check"><input type="checkbox" data-k="s2b"><span>Named with date, ticket, description, and version</span></label></li>
-      <li><label class="check"><input type="checkbox" data-k="s2c"><span>Description includes the ticket reference and one sentence on what users will notice</span></label></li>
-      <li><label class="check"><input type="checkbox" data-k="s2d"><span>Description names who requested it and who signed off UAT</span></label></li>
-      <li><label class="check"><input type="checkbox" data-k="s2e"><span>Description <strong>points at where the manual steps are recorded</strong></span></label></li>
-      <li><label class="check"><input type="checkbox" data-k="s2f"><span>Anything unusual is flagged — a feature to enable first, a data load to follow</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s2b"><span>Ideally: named with information like date, ticket, descriptive context, and version</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s2c"><span>Description includes ticket references and a short description about what the change set contains</span></label></li>
+      <li><label class="check"><input type="checkbox" data-k="s2e"><span>Description can also <strong>point at where any related manual steps are recorded</strong></span></label></li>
     </ul>
-    <div class="callout callout--caution" style="margin-top:18px">
-      <span class="callout__t">Why the description matters</span>
-      <p>A description saying "changes" is how deployments get deployed by someone who has no idea what they're deploying.</p>
-    </div>
   </article>
 
   <!-- STAGE 3 -->
@@ -468,12 +462,12 @@ CRM-Sprint-1 v1</pre>
       <h3 class="stage__ttl">Add components</h3>
       <span class="stage__cnt" data-count></span>
     </div>
-    <p class="stage__sub">The picker shows one component type at a time. It's repetitive and there's no bulk shortcut, so work from a written list rather than memory.</p>
     <span class="path">Open the change set → Change Set Components → Add</span>
+    <p class="stage__sub">The picker shows one component type at a time. It's repetitive and there's no bulk shortcut, so work from a written list rather than memory.</p>
 
     <div class="callout callout--stop">
-      <span class="callout__t">Order matters for one thing</span>
-      <p><strong>Add profiles and permission sets last</strong>, after everything else is in. A profile in a change set carries <em>only the settings relating to components in that same change set</em>. Add it first and you export an almost-empty profile.</p>
+      <span class="callout__t">Order can matter</span>
+      <p><strong>Add profiles (and permission sets) last</strong>, after everything else is in. A profile in a change set carries <em>only the settings relating to components in that same change set</em>. Add it first and you export an almost-empty profile.</p>
     </div>
 
     <h4>Method</h4>
@@ -503,8 +497,8 @@ CRM-Sprint-1 v1</pre>
       <h3 class="stage__ttl">Check dependencies</h3>
       <span class="stage__cnt" data-count></span>
     </div>
-    <p class="stage__sub">Salesforce inspects your components and lists other metadata they reference. It catches a large share of failures — treat it as a helpful assistant, not an authority.</p>
     <span class="path">Open the change set → View/Add Dependencies</span>
+     <p class="stage__sub">Salesforce inspects your components and lists other metadata they reference. It catches a large share of failures — treat it as a helpful assistant, not an authority.</p>
 
     <ul class="checks">
       <li><label class="check"><input type="checkbox" data-k="s4a"><span>Clicked <strong>View/Add Dependencies</strong> and read the list</span></label></li>
@@ -516,7 +510,7 @@ CRM-Sprint-1 v1</pre>
 
     <div class="callout callout--caution">
       <span class="callout__t">Select All is not free</span>
-      <p>Selecting everything is how a small field change quietly overwrites a page layout somebody else spent a week on.</p>
+      <p>Selecting everything can be dangerous, as it can deploy other changes made by different users. Use this option with care and check your listed components.</p>
     </div>
 
     <h4>What dependency checking will not catch</h4>
@@ -538,7 +532,7 @@ CRM-Sprint-1 v1</pre>
       <h3 class="stage__ttl">Write down the manual steps</h3>
       <span class="stage__cnt" data-count></span>
     </div>
-    <p class="stage__sub">The stage people skip, and the stage that causes the bad Monday. Some things simply don't travel in a change set. If they aren't written down, they don't happen.</p>
+    <p class="stage__sub">There are various types of metadata that cannot travel in a change set.</p>
 
     <div class="callout callout--stop">
       <span class="callout__t">Keep two lists</span>
@@ -558,25 +552,23 @@ CRM-Sprint-1 v1</pre>
     <ul>
       <li>A profile carries <strong>only the settings for components in the same change set</strong>. Never a full copy.</li>
       <li>Deploying a profile <strong>never removes</strong> permissions in the target. It only adds and updates.</li>
-      <li><strong>Permission sets deploy in full — assigning them to users is manual</strong>, every time.</li>
+      <li><strong>Permission sets deploy in full — assigning them to users is manual</strong>.</li>
       <li>Field-level security arrives only for fields in the set, only for profiles in the set. Verify per profile.</li>
     </ul>
     <div class="callout callout--caution">
       <span class="callout__t">Test as a user, not an admin</span>
-      <p>After deploying, log in as a real user on each affected profile. Admins see everything, which makes them the worst possible testers of a visibility change.</p>
+      <p>After deploying, log in as a real user on each affected profile (or use Log In As). Admins see everything, which makes them bad testers of a visibility change.</p>
     </div>
 
     <h4>Flows, queues, and rules</h4>
     <ul>
       <li>A <strong>flow usually arrives inactive</strong>. It deploys active only if the org allows it (Setup → Process Automation Settings) <em>and</em> coverage requirements are met. Assume inactive and check.</li>
-      <li>Activating the new version doesn't always deactivate the old one. Confirm you don't have two flows racing on the same trigger.</li>
       <li><strong>Queues</strong> deploy; <strong>membership</strong> — users and public groups — is usually manual.</li>
       <li><strong>Assignment and escalation rules</strong>: the rule and entries deploy, <strong>activation is manual</strong>, one active rule per object, and entry <em>order</em> changes behaviour.</li>
       <li><strong>Lightning record page</strong> activation and assignment normally needs redoing.</li>
     </ul>
 
     <h4>Custom settings vs custom metadata</h4>
-    <p>Worth learning once, because it explains deployments that succeed and do nothing:</p>
     <div class="t-wrap">
       <table>
         <thead><tr><th></th><th>Definition</th><th>The values</th></tr></thead>
@@ -616,11 +608,11 @@ CRM-Sprint-1 v1</pre>
       <h3 class="stage__ttl">Upload and validate</h3>
       <span class="stage__cnt" data-count></span>
     </div>
-    <p class="stage__sub">Upload from the source, then dry-run it in the target before anything real happens.</p>
     <span class="path">Source: Outbound Change Sets → Upload  ·  Target: Inbound Change Sets</span>
+    <p class="stage__sub">Upload from the source, then validate in the target before deploying.</p>
 
     <div class="callout callout--caution">
-      <span class="callout__t">Upload is a one-way door</span>
+      <span class="callout__t">Upload one-way</span>
       <p>The moment you upload, the change set is <strong>frozen</strong>. Need a change? Clone, adjust, bump the version, upload again.</p>
     </div>
 
@@ -628,7 +620,7 @@ CRM-Sprint-1 v1</pre>
 
     <div class="callout callout--go">
       <span class="callout__t">Always validate first</span>
-      <p><strong>Validate runs the entire deployment as a dry run and changes nothing.</strong> Same engine, same errors, no consequences. There is no good reason to skip it for Production. It buys you a complete error list while fixing is still cheap — and, if you ran tests, the option to Quick Deploy later.</p>
+      <p><strong>Validate runs the entire deployment as a dry run and changes nothing.</strong> This step should be considered required and there is no good reason to skip it. You'll get an error list while fixing is still cheap to do so — and, if you ran tests, the option to Quick Deploy later.</p>
     </div>
 
     <h4>Test levels</h4>
@@ -681,8 +673,8 @@ CRM-Sprint-1 v1</pre>
       <h3 class="stage__ttl">Deploy and verify</h3>
       <span class="stage__cnt" data-count></span>
     </div>
-    <p class="stage__sub">Deployment success means the metadata was accepted. It does not mean the change works.</p>
     <span class="path">Target: Inbound Change Sets → Deploy  ·  Monitor: Setup → Deployment Status</span>
+    <p class="stage__sub">Deployment success means the metadata was accepted. It does not mean the change works.</p>
 
     <h4>Order of operations</h4>
     <ul class="checks">
@@ -1196,7 +1188,7 @@ Contact:                     Known issues:</pre>
 
 <footer>
   <p>Deployment path: Dev → UAT / Full → Production. Change sets add and update only; they never delete, and there is no undo.</p>
-  <p>Salesforce moves the furniture from time to time — if a Setup path or a limit here doesn't match what's in front of you, trust the org and update this guide.</p>
+  <p>Salesforce moves the furniture from time to time — if a Setup path or a limit here doesn't match what's in front of you, trust the org and notify the author of this guide.</p>
 </footer>
 
 </div>

@@ -353,7 +353,7 @@ a{color:var(--blue)}
     <h4>Five points about change sets</h4>
     <ul>
       <li><strong>Change sets add and update. They never delete.</strong> Removing a field, layout, or rule from Production is a manual job, done manually in Production, after the deployment.</li>
-      <li><strong>They only work between related orgs</strong> — this is typically a Production org and the sandboxes refreshed from it. Connections must be enabled between these orgs.</li>
+      <li><strong>They only work between related orgs</strong> — this is typically a Production org and the sandboxes created from it. Connections must be enabled between these orgs.</li>
       <li><strong>Once you 'upload', the change set is frozen.</strong> You cannot add a forgotten component. You will need to clone the frozen change set, add the component, and upload again — it is a good idea to use version numbers in the change set name.</li>
       <li><strong>A deployment is all-or-nothing.</strong> If one component fails to deploy the entire change set package is not applied. This is a feature.</li>
       <li><strong>There is no undo.</strong> A "rollback" means a <em>reverse</em> change set you built in advance, or manual unpicking. Have a plan before you deploy.</li>
@@ -394,7 +394,7 @@ a{color:var(--blue)}
 
   <div class="sec-head" style="margin-top:40px">
     <h2>The steps</h2>
-    <p>Thse are the typical steps required to deploy a change set. This example considers deploying from an org called <em><strong>Dev</strong> to an org called <em><strong>UAT</strong></em>>.</p>
+    <p>Thse are the typical steps required to deploy a change set. This example considers deploying from an org called <em><strong>Dev</strong></em> to an org called <em><strong>UAT</strong></em>>.</p>
   </div>
 
   <!-- STAGE 1 -->
@@ -478,6 +478,7 @@ CRM-Sprint-1 v1.1</pre>
       <li><label class="check"><input type="checkbox" data-k="s3d"><span>Add profiles and permission sets <strong>last</strong></span></label></li>
       <li><label class="check"><input type="checkbox" data-k="s3e"><span>Component count matches the written list</span></label></li>
     </ul>
+    <p class="stage__sub">Template B in the <strong>Templates</strong> tab is the written list — component type, name, API name, whether it's new or modified, and a note for anything that needs a manual step.</p>
 
     <h4>Commonly forgotten</h4>
     <ul>
@@ -920,7 +921,7 @@ CRM-Sprint-1 v1.1</pre>
 <section class="panel" id="p-tpl" role="tabpanel" aria-labelledby="t-tpl" hidden>
   <div class="sec-head">
     <h2>Templates</h2>
-    <p>Copy, paste, fill in. The runbook is the one that matters most — it's the difference between a deployment and a hope.</p>
+    <p>Copy, paste, fill in. The runbook is the one that matters most — it's the difference between a deployment and a hope. The component list and the runbook are written as markdown tables, so they paste into Confluence as real tables rather than a block of preformatted text.</p>
   </div>
 
   <div class="tpl">
@@ -969,55 +970,112 @@ If this breaks in Production, the immediate mitigation is:</pre>
 
   <div class="tpl">
     <div class="tpl__h">
-      <h3 class="tpl__n">B · Manual steps runbook</h3>
+      <h3 class="tpl__n">B · Component list</h3>
       <button class="copy" type="button" data-copy="tpl-b">Copy</button>
     </div>
-    <p class="tpl__d">Attach to every deployment. Point at it from the change set description.</p>
-    <pre id="tpl-b">MANUAL STEPS — &lt;change set name and version&gt;
-Deployer:                          Date:
+    <p class="tpl__d">The written list Stage 3 asks for — fill this in <em>before</em> you open Outbound Change Sets, then tick items off as you add them. Markdown: paste straight into Confluence.</p>
+    <pre id="tpl-b">## Component list — `&lt;change set name and version&gt;`
 
-BEFORE DEPLOYMENT
-#   Step                                  Where          Owner   Done
-1   Enable &lt;feature&gt;                      Setup → ...            [ ]
-2   Confirm reverse change set prepared                          [ ]
-3
-4
+| Field              | Value |
+|--------------------|-------|
+| Ticket / work item |       |
+| Compiled by        |       |
+| Date               |       |
+| Source org         |       |
+| Target org         |       |
 
-DEPLOY
-    Validate against target                                      [ ]
-    Validation result: PASS / FAIL       Errors resolved: [ ]
-    Deploy / Quick Deploy                Time started:
-    Deployment Status: SUCCEEDED / FAILED
+| Component Type | Component Name    | API Name                  | New / Modified | Notes                                   |
+|----------------|-------------------|---------------------------|----------------|-----------------------------------------|
+| Custom Field   | Tier 2 Escalation | Case.Tier_2_Escalation__c | New            | Page layout must go in the set too      |
+| Flow           | Case Routing      | Case_Routing              | Modified       | Arrives inactive — activate post-deploy |
+| Permission Set | Support Tier 2    | Support_Tier_2            | New            | Assignment to users is manual           |
+|                |                   |                           |                |                                         |
+|                |                   |                           |                |                                         |
+|                |                   |                           |                |                                         |
 
-AFTER DEPLOYMENT
-#   Step                                  Where          Owner   Done
-1   Activate flow &lt;name&gt;, deactivate v&lt;n&gt;                        [ ]
-2   Assign permission set &lt;name&gt; to &lt;group&gt;                      [ ]
-3   Add picklist values to standard field &lt;name&gt;                 [ ]
-4   Make record type &lt;name&gt; available to profiles &lt;...&gt;          [ ]
-5   Populate custom setting &lt;name&gt;                               [ ]
-6   Add members to queue &lt;name&gt;                                  [ ]
-7   Activate assignment rule &lt;name&gt;, confirm entry order         [ ]
-8   Re-schedule job &lt;name&gt;                                       [ ]
-9
+| Reconciliation                | Value |
+|-------------------------------|-------|
+| Total components listed above |       |
+| Count shown in the change set |       |
 
-SMOKE TEST
-Logged in as real user on profile:                Result:
-Logged in as real user on profile:                Result:
-End-to-end scenario tested:                       Result:
-Old automation confirmed not firing:              Result:
+These two must match before you upload.
 
-OUTCOME
+### Deliberately excluded
+
+Anything the dependency check offered that you chose not to add — and why.
+
+| Component | Why it is not in this set |
+|-----------|---------------------------|
+|           |                           |
+|           |                           |</pre>
+  </div>
+
+  <div class="tpl">
+    <div class="tpl__h">
+      <h3 class="tpl__n">C · Manual steps runbook</h3>
+      <button class="copy" type="button" data-copy="tpl-c">Copy</button>
+    </div>
+    <p class="tpl__d">Attach to every deployment. Point at it from the change set description. Markdown: paste straight into Confluence.</p>
+    <pre id="tpl-c">## Manual steps — `&lt;change set name and version&gt;`
+
+| Field    | Value |
+|----------|-------|
+| Deployer |       |
+| Date     |       |
+
+### Before deployment
+
+| # | Step                                | Where       | Owner | Done |
+|---|-------------------------------------|-------------|-------|------|
+| 1 | Enable `&lt;feature&gt;`                  | Setup → ... |       | [ ]  |
+| 2 | Confirm reverse change set prepared |             |       | [ ]  |
+| 3 |                                     |             |       | [ ]  |
+| 4 |                                     |             |       | [ ]  |
+
+### Deploy
+
+| Step                    | Result             |
+|-------------------------|--------------------|
+| Validate against target | PASS / FAIL        |
+| Errors resolved         | [ ]                |
+| Deploy / Quick Deploy   | Time started:      |
+| Deployment Status       | SUCCEEDED / FAILED |
+
+### After deployment
+
+| # | Step                                                 | Where | Owner | Done |
+|---|------------------------------------------------------|-------|-------|------|
+| 1 | Activate flow `&lt;name&gt;`, deactivate v`&lt;n&gt;`            |       |       | [ ]  |
+| 2 | Assign permission set `&lt;name&gt;` to `&lt;group&gt;`          |       |       | [ ]  |
+| 3 | Add picklist values to standard field `&lt;name&gt;`       |       |       | [ ]  |
+| 4 | Make record type `&lt;name&gt;` available to profiles      |       |       | [ ]  |
+| 5 | Populate custom setting `&lt;name&gt;`                     |       |       | [ ]  |
+| 6 | Add members to queue `&lt;name&gt;`                        |       |       | [ ]  |
+| 7 | Activate assignment rule `&lt;name&gt;`, check entry order |       |       | [ ]  |
+| 8 | Re-schedule job `&lt;name&gt;`                             |       |       | [ ]  |
+| 9 |                                                      |       |       | [ ]  |
+
+### Smoke test
+
+| Check                               | Who / What | Result |
+|-------------------------------------|------------|--------|
+| Logged in as real user on profile   |            |        |
+| Logged in as real user on profile   |            |        |
+| End-to-end scenario tested          |            |        |
+| Old automation confirmed not firing |            |        |
+
+### Outcome
+
 Complete / Rolled back / Partial — notes:</pre>
   </div>
 
   <div class="tpl">
     <div class="tpl__h">
-      <h3 class="tpl__n">C · Release note</h3>
-      <button class="copy" type="button" data-copy="tpl-c">Copy</button>
+      <h3 class="tpl__n">D · Release note</h3>
+      <button class="copy" type="button" data-copy="tpl-d">Copy</button>
     </div>
     <p class="tpl__d">Short enough that people read it. Written for colleagues who don't know what a change set is.</p>
-    <pre id="tpl-c">RELEASE NOTE — &lt;date&gt;
+    <pre id="tpl-d">RELEASE NOTE — &lt;date&gt;
 
 WHAT CHANGED
 &lt;One or two sentences a non-Salesforce colleague would understand.&gt;
